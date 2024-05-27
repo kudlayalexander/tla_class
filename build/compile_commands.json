@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/couldlie/vscode_projs/tla2024/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/lib.dir/TLA2024.cpp.o -c /home/couldlie/vscode_projs/tla2024/TLA2024.cpp",
+  "file": "/home/couldlie/vscode_projs/tla2024/TLA2024.cpp",
+  "output": "CMakeFiles/lib.dir/TLA2024.cpp.o"
+},
+{
+  "directory": "/home/couldlie/vscode_projs/tla2024/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/main.dir/main.cpp.o -c /home/couldlie/vscode_projs/tla2024/main.cpp",
+  "file": "/home/couldlie/vscode_projs/tla2024/main.cpp",
+  "output": "CMakeFiles/main.dir/main.cpp.o"
+}
+]
