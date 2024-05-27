@@ -142,7 +142,7 @@ uint16_t TLA2024::getMode() {
 // }
  
 void TLA2024::setConfigurationRegister() {
-    uint16_t cfg_reg = dr | mode | pga | mux | os;
+    cfg_reg = dr | mode | pga | mux | os;
 }
  
 uint16_t TLA2024::getConfigurationRegister() {

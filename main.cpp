@@ -8,6 +8,7 @@ int main() {
 
     std::cout << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << tla->getMode() << std::nouppercase << std::dec  << std::endl;
 
+    tla->setConfigurationRegister();
     int16_t conversion_content = tla->readAdc();
 
     std::cout << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << conversion_content << std::nouppercase << std::dec  << std::endl;
