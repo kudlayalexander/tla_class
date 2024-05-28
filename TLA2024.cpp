@@ -7,12 +7,12 @@ static int connectToI2C(const char* i2c_path, uint8_t i2c_address) {
     i2c_fd = open(i2c_path, O_RDWR);
  
     if (i2c_fd == -1) {
-        std::cout << "Unable to connect to i2c" << std::endl;
+        std::cout << "File descriptor have not been found" << std::endl;
         return -1;
     }
 
     if (ioctl(i2c_fd, I2C_SLAVE, i2c_address) < 0) {
-        std::cout << "Error when connecting to I2C\n" << std::endl;
+        std::cout << "Error when connecting to I2C" << std::endl;
         return -1;
     }
     
@@ -30,7 +30,7 @@ static void disconnectFromI2C() {
     close(i2c_fd);
 };
  
-static int writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer, uint16_t value) {  
+static int16_t writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer, uint16_t value) {  
     if (connectToI2C(i2c_path, i2c_address) < 0) {
         return -1;
     }
