@@ -1,4 +1,4 @@
-/home/couldlie/vscode_projs/tla2024/build/CMakeFiles/lib.dir
-/home/couldlie/vscode_projs/tla2024/build/CMakeFiles/main.dir
-/home/couldlie/vscode_projs/tla2024/build/CMakeFiles/edit_cache.dir
-/home/couldlie/vscode_projs/tla2024/build/CMakeFiles/rebuild_cache.dir
+/root/tla_class/tla_class/build/CMakeFiles/edit_cache.dir
+/root/tla_class/tla_class/build/CMakeFiles/main.dir
+/root/tla_class/tla_class/build/CMakeFiles/rebuild_cache.dir
+/root/tla_class/tla_class/build/CMakeFiles/lib.dir

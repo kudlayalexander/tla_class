@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/tla_class/tla_class/TLA2024.cpp
+TLA2024.h
+/root/tla_class/tla_class/TLA2024.h
+iostream
+-
+
+/root/tla_class/tla_class/TLA2024.h
+stdint.h
+-
+fcntl.h
+-
+stddef.h
+-
+stdint.h
+-
+stdlib.h
+-
+stdio.h
+-
+errno.h
+-
+linux/i2c-dev.h
+-
+sys/ioctl.h
+-
+unistd.h
+-
+

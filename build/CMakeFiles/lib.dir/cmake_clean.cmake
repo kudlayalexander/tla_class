@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/lib.dir/TLA2024.cpp.o"
-  "CMakeFiles/lib.dir/TLA2024.cpp.o.d"
   "liblib.a"
   "liblib.pdb"
 )

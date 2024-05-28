@@ -30,15 +30,15 @@ static void disconnectFromI2C() {
     close(i2c_fd);
 };
  
-static int writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer, uint16_t value) {
+static int writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer, uint16_t value) {  
     if (connectToI2C(i2c_path, i2c_address) < 0) {
         return -1;
     }
  
     unsigned char buf[3] = {register_pointer, (uint8_t)(value >> 8), (uint8_t)(0xFF)};
- 
+   
     uint16_t returned = write(*i2c_path, buf, 3);
- 
+
     if (returned == -1) {
         std::cout << "Error during writing" << std::endl;
         return -1;
@@ -53,20 +53,26 @@ static uint16_t readRegister(const char* i2c_path, uint8_t i2c_address, uint8_t 
     // if (connectToI2C(i2c_path, i2c_address) < 0) {
     //     return NULL;
     // }
-    connectToI2C(i2c_path, i2c_address);
+    if (connectToI2C(i2c_path, i2c_address) < 0) {
+        std::cout << "Error when connecting  during readRegister()" << std::endl;           
+    }
 
-    int returned;
+    uint16_t returned;
     unsigned char writeBuf[1] = { register_pointer };
     returned = write(*i2c_path, writeBuf, 1);
     if (returned == -1) {
         std::cout << "Error during writing" << std::endl;
     }
+
+    usleep(500000);
  
     unsigned char readBuf[2] = { };
     returned = read(*i2c_path, readBuf, 2);
     if (returned == -1) {
         std::cout << "Error during reading" << std::endl;
     }
+    
+    usleep(500000);
  
     disconnectFromI2C();
  
@@ -142,7 +148,7 @@ uint16_t TLA2024::getMode() {
 // }
  
 void TLA2024::setConfigurationRegister() {
-    uint16_t cfg_reg = dr | mode | pga | mux | os;
+    cfg_reg = dr | mode | pga | mux | os;
 }
  
 uint16_t TLA2024::getConfigurationRegister() {
@@ -187,14 +193,18 @@ int16_t TLA2024::getLastConversion() {
     {
         usleep(10);
     } while (REGISTER_CONFIG_OS_BUSY == (readRegister(i2c_path, i2c_address, cfg_reg) & REGISTER_CONFIG_OS_MASK));
+    
+    std::cout << "get conversion" << std::endl;
+
+    uint16_t conversion_content = readRegister(i2c_path, i2c_address, REGISTER_POINTER_CONVERSION) >> 4;
+
+    std::cout << std::hex << conversion_content << std::dec << std::endl;
  
-    uint16_t convertion_content = readRegister(i2c_path, i2c_address, REGISTER_POINTER_CONVERSION) >> 4;
- 
-    if (convertion_content > 0x07FF) {
-        convertion_content |= 0xF000;
+    if (conversion_content > 0x07FF) {
+        conversion_content |= 0xF000;
     }
  
-    return (int16_t)convertion_content;
+    return (int16_t)conversion_content;
 }
  
 /*  
