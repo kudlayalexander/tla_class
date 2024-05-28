@@ -7,7 +7,7 @@ static int connectToI2C(const char* i2c_path, uint8_t i2c_address) {
     i2c_fd = open(i2c_path, O_RDWR);
  
     if (i2c_fd == -1) {
-        std::cout << "File descriptor have not been found" << std::endl;
+        std::cout << "File descriptor has not been found" << std::endl;
         return -1;
     }
 
@@ -37,7 +37,7 @@ static int16_t writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t 
  
     unsigned char buf[3] = {register_pointer, (uint8_t)(value >> 8), (uint8_t)(0xFF)};
    
-    uint16_t returned = write(*i2c_path, buf, 3);
+    uint16_t returned = write(i2c_fd, buf, 3);
 
     if (returned == -1) {
         std::cout << "Error during writing" << std::endl;
@@ -59,20 +59,16 @@ static uint16_t readRegister(const char* i2c_path, uint8_t i2c_address, uint8_t 
 
     uint16_t returned;
     unsigned char writeBuf[1] = { register_pointer };
-    returned = write(*i2c_path, writeBuf, 1);
+    returned = write(i2c_fd, writeBuf, 1);
     if (returned == -1) {
         std::cout << "Error during writing" << std::endl;
     }
-
-    usleep(500000);
  
     unsigned char readBuf[2] = { };
-    returned = read(*i2c_path, readBuf, 2);
+    returned = read(i2c_fd, readBuf, 2);
     if (returned == -1) {
         std::cout << "Error during reading" << std::endl;
     }
-    
-    usleep(500000);
  
     disconnectFromI2C();
  
@@ -148,7 +144,7 @@ uint16_t TLA2024::getMode() {
 // }
  
 void TLA2024::setConfigurationRegister() {
-    cfg_reg = dr | mode | pga | mux | os;
+    cfg_reg = dr | mode | pga | mux | os | REGISTER_CONFIG_RESERVED_ALWAYS;
 }
  
 uint16_t TLA2024::getConfigurationRegister() {
@@ -188,11 +184,20 @@ uint16_t TLA2024::getConversionTime() {
 int16_t TLA2024::getLastConversion() {
     conversion_time = getConversionTime();
     usleep(conversion_time);
- 
+    
+    std::cout << "i2c_path:" << i2c_path << std::endl;
+    std::cout << "i2c_address: "<< std::hex << i2c_address << std::dec << std::endl;
+    std::cout << "config register:" << std::hex << cfg_reg << std::dec << std::endl;  
+    uint16_t answ;
+
     do
     {
-        usleep(10);
-    } while (REGISTER_CONFIG_OS_BUSY == (readRegister(i2c_path, i2c_address, cfg_reg) & REGISTER_CONFIG_OS_MASK));
+        answ = readRegister(i2c_path, i2c_address, cfg_reg);
+        uint16_t m = answ & REGISTER_CONFIG_OS_MASK;
+        std::cout << "read reg: " << std::hex << answ << std::dec << std::endl;
+        std::cout << std::hex << m << std::dec << std::endl;
+        usleep(10000);
+    } while (REGISTER_CONFIG_OS_BUSY == (answ & REGISTER_CONFIG_OS_MASK));
     
     std::cout << "get conversion" << std::endl;
 
@@ -230,6 +235,7 @@ int16_t TLA2024::getLastConversion() {
 int16_t TLA2024::readAdc() {
     // set register config
     uint16_t config = getConfigurationRegister();
+    config |= REGISTER_CONFIG_MOD_SINGLE;
  
     // write register config
     writeRegister(i2c_path, i2c_address, REGISTER_POINTER_CONFIGURATION, config);

@@ -92,6 +92,7 @@
 /// Reserved 
 /// Always write 03h
 #define REGISTER_CONFIG_RESERVED_MASK (0x001F) // bit 4-0
+#define REGISTER_CONFIG_RESERVED_ALWAYS (0x0003)
  
 /// If the host initiates contact with the TLA202x but subsequently 
 /// remains idle for 25 ms before completing a command, the TLA202x 
