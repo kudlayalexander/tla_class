@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
+<<<<<<< HEAD
   "../CMakeLists.txt"
   "CMakeFiles/3.18.4/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.18.4/CMakeSystem.cmake"
@@ -26,6 +27,26 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.18/Modules/Platform/Linux-GNU.cmake"
   "/usr/share/cmake-3.18/Modules/Platform/Linux.cmake"
   "/usr/share/cmake-3.18/Modules/Platform/UnixPaths.cmake"
+=======
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeCXXInformation.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeGenericSystem.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Compiler/GNU.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Platform/Linux-GNU-CXX.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Platform/Linux-GNU.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Platform/Linux-Initialize.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Platform/Linux.cmake"
+  "/home/couldlie/share/cmake-3.29/Modules/Platform/UnixPaths.cmake"
+  "/home/couldlie/vscode_projs/tla2024/CMakeLists.txt"
+  "CMakeFiles/3.29.3/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.29.3/CMakeSystem.cmake"
+>>>>>>> e4fc35944971b10d361b371c5af7773c80c7b2b6
   )
 
 # The corresponding makefile is:
