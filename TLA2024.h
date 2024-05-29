@@ -32,6 +32,8 @@
  
 #define REGISTER_POINTER_CONVERSION (0x00) // ConversionDataRegister(RP = 00h)[reset= 0000h]
 #define REGISTER_POINTER_CONFIGURATION (0x01) // ConfigurationRegister(RP = 01h)[reset= 8583h]
+#define REGISTER_POINTER_LOWTHRESH (0x02) // Low threshold
+#define REGISTER_POINTER_HITHRESH (0x03)  // High threshold
  
 //////// REGISTER CONFIG CONFIGURATION
  

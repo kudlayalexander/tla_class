@@ -7,7 +7,7 @@ int i2c_fd;
 TLA2024::TLA2024() {
     int fd = 0;
     dr = REGISTER_CONFIG_DR_1600_SPS;
-    fsr = REGISTER_CONFIG_PGA_2_048V;
+    fsr = REGISTER_CONFIG_FSR_2_048V;
     mux = REGISTER_CONFIG_MUX_0_1;
     mode = REGISTER_CONFIG_MOD_SINGLE;
     os = REGISTER_CONFIG_OS_SINGLE_CONVERSION;
@@ -56,8 +56,8 @@ void TLA2024::prepareForReading(uint16_t mux, bool continuous) {
 
     writeRegister(REGISTER_POINTER_CONFIGURATION, config);
 
-    // writeRegister(ADS1X15_REG_POINTER_HITHRESH, 0x8000);
-    // writeRegister(ADS1X15_REG_POINTER_LOWTHRESH, 0x0000);
+    writeRegister(REGISTER_POINTER_HITHRESH, 0x8000);
+    writeRegister(REGISTER_POINTER_LOWTHRESH, 0x0000);
 }
 
 int16_t TLA2024::readAdc(uint16_t mux) {
