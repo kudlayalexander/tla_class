@@ -2,162 +2,113 @@
 #include <iostream>
  
 int i2c_fd;
- 
-static int connectToI2C(const char* i2c_path, uint8_t i2c_address) {
-    i2c_fd = open(i2c_path, O_RDWR);
- 
-    if (i2c_fd == -1) {
-        std::cout << "File descriptor has not been found" << std::endl;
-        return -1;
-    }
 
-    if (ioctl(i2c_fd, I2C_SLAVE, i2c_address) < 0) {
-        std::cout << "Error when connecting to I2C" << std::endl;
-        return -1;
-    }
-    
-    unsigned char buf[1] = {};
-    buf[0] = 0;
-    if (write(i2c_fd, buf, 1) != 1) {
-        std::cout << "Error when trying to write to I2C" << std::endl;;
-        return -1;
-    }
-    std::cout << "Device connected on address " << std::hex << std::uppercase << i2c_address << std::nouppercase << std::dec << std::endl;
-    return 0;
-};
- 
-static void disconnectFromI2C() {
-    close(i2c_fd);
-};
- 
-static int16_t writeRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer, uint16_t value) {  
-    if (connectToI2C(i2c_path, i2c_address) < 0) {
-        return -1;
-    }
- 
-    unsigned char buf[3] = {register_pointer, (uint8_t)(value >> 8), (uint8_t)(0xFF)};
-   
-    uint16_t returned = write(i2c_fd, buf, 3);
 
-    if (returned == -1) {
-        std::cout << "Error during writing" << std::endl;
-        return -1;
-    }
- 
-    disconnectFromI2C();
-    return 0;
-};
- 
-static uint16_t readRegister(const char* i2c_path, uint8_t i2c_address, uint8_t register_pointer) {
-    // pridumat vmesto null
-    // if (connectToI2C(i2c_path, i2c_address) < 0) {
-    //     return NULL;
-    // }
-    if (connectToI2C(i2c_path, i2c_address) < 0) {
-        std::cout << "Error when connecting  during readRegister()" << std::endl;           
-    }
-
-    uint16_t returned;
-    unsigned char writeBuf[1] = { register_pointer };
-    returned = write(i2c_fd, writeBuf, 1);
-    if (returned == -1) {
-        std::cout << "Error during writing" << std::endl;
-    }
- 
-    unsigned char readBuf[2] = { };
-    returned = read(i2c_fd, readBuf, 2);
-    if (returned == -1) {
-        std::cout << "Error during reading" << std::endl;
-    }
- 
-    disconnectFromI2C();
- 
-    uint16_t value = ((readBuf[0] << 8) | (readBuf[1]));
-    return value;
-};
- 
-TLA2024::TLA2024(const char *i2c_path_, uint8_t i2c_address_) {
-    i2c_path = i2c_path_;
-    i2c_address = i2c_address_;
+TLA2024::TLA2024() {
+    int fd = 0;
     dr = REGISTER_CONFIG_DR_1600_SPS;
-    pga = REGISTER_CONFIG_PGA_2_048V;
+    fsr = REGISTER_CONFIG_PGA_2_048V;
     mux = REGISTER_CONFIG_MUX_0_1;
     mode = REGISTER_CONFIG_MOD_SINGLE;
     os = REGISTER_CONFIG_OS_SINGLE_CONVERSION;
     conversion_time = getConversionTime();
 }
+
+bool TLA2024::init(const char* i2c_path, uint8_t i2c_address) {
+    if (this->i2c_fd > 0) {
+        close(this->i2c_fd);
+    }
+    std::cout << "Connecting to " << i2c_path << std::endl;
+
+    this->i2c_fd = open(i2c_path, O_RDWR);
+
+    if (this->i2c_fd < 0) {
+        std::cout << "Unable to open file descriptor" << std::endl;
+        return -1;
+    }
+    else {
+        if (ioctl(this->i2c_fd, I2C_SLAVE, i2c_address) < 0) {
+            std::cout << "File descriptor doesn't exist" << std::endl;
+            return -1;
+        }
+
+        std::cout << "File descriptor successfully opened;" << std::endl;
+    }
+
+    return 1;
+};
  
-void TLA2024::setPGA(uint16_t pga_) {
-    pga = pga_;
+void TLA2024::prepareForReading(uint16_t mux, bool continuous) {
+    uint16_t config = 0x0000;
+
+    if (continuous) {
+        config |= REGISTER_CONFIG_MOD_CONTINUOUS;   
+    } 
+    else {
+        config |= REGISTER_CONFIG_MOD_SINGLE;
+    }
+
+    config |= this->fsr;
+    config |= this->dr;
+    config |= mux;
+
+    config |= REGISTER_CONFIG_OS_SINGLE_CONVERSION;
+
+    writeRegister(REGISTER_POINTER_CONFIGURATION, config);
+
+    // writeRegister(ADS1X15_REG_POINTER_HITHRESH, 0x8000);
+    // writeRegister(ADS1X15_REG_POINTER_LOWTHRESH, 0x0000);
 }
- 
-uint16_t TLA2024::getPGA() {
-    return pga;
+
+int16_t TLA2024::readAdc(uint16_t mux) {
+    prepareForReading(mux, false);
+    conversion_time = getConversionTime();
+
+    do {
+        usleep(conversion_time);
+    } while (( readRegister(REGISTER_POINTER_CONFIGURATION) & REGISTER_CONFIG_OS_MASK )!= 0);
+
+    uint16_t result = readRegister(REGISTER_POINTER_CONVERSION) >> 4;
+
+    if (result > 0x07FF) {
+        result |= 0xF000;
+    }
+    return (int16_t)result;
 }
- 
-void TLA2024::setDR(uint16_t dr_) {
-    dr = dr_;
+
+uint16_t TLA2024::readRegister(uint8_t reg) {
+    if (write(this->i2c_fd, &reg, 1) != 1)
+        return 0;
+
+    if (read(this->i2c_fd, this->buffer, 2) != 2)
+        return 0;
+
+    return ((buffer[0] << 8) | buffer[1]);
 }
- 
-uint16_t TLA2024::getDR() {
-    return dr;
+
+int16_t TLA2024::writeRegister(uint8_t reg, uint16_t data) {
+    this->buffer[0] = reg;
+    this->buffer[1] = (uint8_t)(data >> 8);
+    this->buffer[2] = (uint8_t)(data & 0x00FF);
+
+    if (write(this->i2c_fd, this->buffer, 3) != 3) {
+        return -1;
+    }
+
+    return 3;
 }
- 
-void TLA2024::setMUX(uint16_t mux_) {
-    mux = mux_;
+
+uint16_t TLA2024::getConversionTime() {
+    return conversion_time;
 }
- 
-uint16_t TLA2024::getMUX() {
-    return mux;
-}
- 
-void TLA2024::setOS(uint16_t os_) {
-    os = os_;
-}
- 
-uint16_t TLA2024::getOS() {
-    return os;
-}
- 
-void TLA2024::setMode(uint16_t mode_) {
-    mode = mode_;
-}
- 
-uint16_t TLA2024::getMode() {
-    return mode;
-}
- 
-// void TLA2024::setI2CPath(char* i2c_path_) {
-//     i2c_path = i2c_path_;
-// }
- 
-// const char* TLA2024::getI2CPath() {
-//     return i2c_path;
-// }
- 
-// void TLA2024::setI2CAddress(uint8_t i2c_address_) {
-//     i2c_address = i2c_address_;
-// }
- 
-// uint8_t TLA2024::getI2CAddress() {
-//     return i2c_address;
-// }
- 
-void TLA2024::setConfigurationRegister() {
-    cfg_reg = dr | mode | pga | mux | os | REGISTER_CONFIG_RESERVED_ALWAYS;
-}
- 
-uint16_t TLA2024::getConfigurationRegister() {
-    return cfg_reg;
-}
- 
+
 // Conversions in the TLA202x settle within a single cycle,
 // which means the conversion time equals 1 / DR.
  
 void TLA2024::setConversionTime(uint16_t dr) {
     switch (dr) {
         case (REGISTER_CONFIG_DR_128_SPS):
-            conversion_time = 1000000 / 128;
+            conversion_time = 1000000 / 128 + 5;
         case (REGISTER_CONFIG_DR_250_SPS):
             conversion_time = 1000000 / 250 + 5;
         case (REGISTER_CONFIG_DR_490_SPS):
@@ -176,71 +127,43 @@ void TLA2024::setConversionTime(uint16_t dr) {
  
     conversion_time = (uint16_t)(conversion_time * 1.1);
 }
- 
-uint16_t TLA2024::getConversionTime() {
-    return conversion_time;
+
+void TLA2024::setFullScaleRange(uint16_t fsr_) {
+    fsr = fsr_;
 }
  
-int16_t TLA2024::getLastConversion() {
-    conversion_time = getConversionTime();
-    usleep(conversion_time);
-    
-    std::cout << "i2c_path:" << i2c_path << std::endl;
-    std::cout << "i2c_address: "<< std::hex << i2c_address << std::dec << std::endl;
-    std::cout << "config register:" << std::hex << cfg_reg << std::dec << std::endl;  
-    uint16_t answ;
-
-    do
-    {
-        answ = readRegister(i2c_path, i2c_address, cfg_reg);
-        uint16_t m = answ & REGISTER_CONFIG_OS_MASK;
-        std::cout << "read reg: " << std::hex << answ << std::dec << std::endl;
-        std::cout << std::hex << m << std::dec << std::endl;
-        usleep(10000);
-    } while (REGISTER_CONFIG_OS_BUSY == (answ & REGISTER_CONFIG_OS_MASK));
-    
-    std::cout << "get conversion" << std::endl;
-
-    uint16_t conversion_content = readRegister(i2c_path, i2c_address, REGISTER_POINTER_CONVERSION) >> 4;
-
-    std::cout << std::hex << conversion_content << std::dec << std::endl;
- 
-    if (conversion_content > 0x07FF) {
-        conversion_content |= 0xF000;
-    }
- 
-    return (int16_t)conversion_content;
+uint16_t TLA2024::getFullScaleRange() {
+    return fsr;
 }
  
-/*  
-    Read the conversion data register or configuration register
-    by using two I2C communication frames.
+void TLA2024::setDataRate(uint16_t dr_) {
+    dr = dr_;
+}
  
-    The first frame is an I2C write operation where 
-    the R/W bit at the end of the slave address is 0 to indicate a write.
-    In this frame, the host sends the register pointer that points
-    to the register to read from. 
+uint16_t TLA2024::getDataRate() {
+    return dr;
+}
  
-    The second frame is an I2C read operation where the R/W bit
-    at the end of the slave address is 1 to indicate a read.
-    The TLA202x transmits the contents of the register in this second I2C frame.
-    The master can terminate the transmission after any byte by not acknowledging 
-    or issuing a START or STOP condition.
+void TLA2024::setMultiplexerConfig(uint16_t mux_) {
+    mux = mux_;
+}
  
-    When repeatedly reading the same register, the register pointer
-    does not need to be written every time again because the TLA202x store
-    the value of the register pointer until a write operation modifies the value. 
-*/
+uint16_t TLA2024::getMultiplexerConfig() {
+    return mux;
+}
  
-int16_t TLA2024::readAdc() {
-    // set register config
-    uint16_t config = getConfigurationRegister();
-    config |= REGISTER_CONFIG_MOD_SINGLE;
+void TLA2024::setOS(uint16_t os_) {
+    os = os_;
+}
  
-    // write register config
-    writeRegister(i2c_path, i2c_address, REGISTER_POINTER_CONFIGURATION, config);
+uint16_t TLA2024::getOS() {
+    return os;
+}
  
-    // get last conversion
-    int16_t conversion_content = getLastConversion();
-    return conversion_content;
+void TLA2024::setMode(uint16_t mode_) {
+    mode = mode_;
+}
+ 
+uint16_t TLA2024::getMode() {
+    return mode;
 }

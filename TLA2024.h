@@ -59,12 +59,12 @@
 // These bits set the FSR of the programm able gain amplifier.
 #define REGISTER_CONFIG_PGA_MASK (0x0E00) // bit 11-9
  
-#define REGISTER_CONFIG_PGA_6_144V (0x0000) // 000 : FSR= +-6.144V
-#define REGISTER_CONFIG_PGA_4_096V (0x0200) // 001 : FSR= +-4.096V
-#define REGISTER_CONFIG_PGA_2_048V (0x0400) // 010 : FSR= +-2.048V (default)
-#define REGISTER_CONFIG_PGA_1_024V (0x0600) // 011 : FSR= +-1.024V
-#define REGISTER_CONFIG_PGA_0_512V (0x0800) // 100 : FSR= +-0.512V
-#define REGISTER_CONFIG_PGA_0_256V (0x0A00) // 101 : FSR= +-0.256V
+#define REGISTER_CONFIG_FSR_6_144V (0x0000) // 000 : FSR= +-6.144V
+#define REGISTER_CONFIG_FSR_4_096V (0x0200) // 001 : FSR= +-4.096V
+#define REGISTER_CONFIG_FSR_2_048V (0x0400) // 010 : FSR= +-2.048V (default)
+#define REGISTER_CONFIG_FSR_1_024V (0x0600) // 011 : FSR= +-1.024V
+#define REGISTER_CONFIG_FSR_0_512V (0x0800) // 100 : FSR= +-0.512V
+#define REGISTER_CONFIG_FSR_0_256V (0x0A00) // 101 : FSR= +-0.256V
 // #define REGISTER_CONFIG_PGA_0_256V (0x0C00) // 110 : FSR= +-0.256V
 // #define REGISTER_CONFIG_PGA_0_256V (0x0E00) // 111 : FSR= +-0.256V
  
@@ -93,6 +93,8 @@
 /// Always write 03h
 #define REGISTER_CONFIG_RESERVED_MASK (0x001F) // bit 4-0
 #define REGISTER_CONFIG_RESERVED_ALWAYS (0x0003)
+
+#define REGISTER_CONFIGURATION_DEFAULT (0x8583)
  
 /// If the host initiates contact with the TLA202x but subsequently 
 /// remains idle for 25 ms before completing a command, the TLA202x 
@@ -105,43 +107,68 @@
 
 class TLA2024 {
     protected:
-        const char *i2c_path;
-        uint8_t i2c_address;
+        int i2c_fd;
         uint16_t dr;
-        uint16_t pga;
+        uint16_t fsr;
         uint16_t mux;
         uint16_t mode;
         uint16_t os;
-        uint16_t cfg_reg;
         uint16_t conversion_time;
  
     public:
-        TLA2024(const char *i2c_path = I2C_DEFAULT_PATH, uint8_t i2c_address = I2C_ADDRESS_1);
- 
-        int16_t readAdc();
+    
+        TLA2024();
+
+        bool init(const char *i2c_path = I2C_DEFAULT_PATH, uint8_t i2c_address = I2C_ADDRESS_1);
+        
+        /*  
+        Read the conversion data register or configuration register
+        by using two I2C communication frames.
+    
+        The first frame is an I2C sendBytes operation where 
+        the R/W bit at the end of the slave address is 0 to indicate a sendBytes.
+        In this frame, the host sends the register pointer that points
+        to the register to receiveBytes from. 
+    
+        The second frame is an I2C receiveBytes operation where the R/W bit
+        at the end of the slave address is 1 to indicate a receiveBytes.
+        The TLA202x transmits the contents of the register in this second I2C frame.
+        The master can terminate the transmission after any byte by not acknowledging 
+        or issuing a START or STOP condition.
+    
+        When repeatedly reading the same register, the register pointer
+        does not need to be written every time again because the TLA202x store
+        the value of the register pointer until a sendBytes operation modifies the value. 
+        */
+        void prepareForReading(uint16_t mux, bool continuous);
+        int16_t readAdc(uint16_t mux);
+
         int16_t getLastConversion();
  
-        void setPGA(uint16_t pga);
-        uint16_t getPGA();
+        void setFullScaleRange(uint16_t fsr_);
+        uint16_t getFullScaleRange();
  
-        void setDR(uint16_t dr);
-        uint16_t getDR();
+        void setDataRate(uint16_t dr_);
+        uint16_t getDataRate();
  
-        void setMUX(uint16_t mux);
-        uint16_t getMUX();
+        void setMultiplexerConfig(uint16_t mux_);
+        uint16_t getMultiplexerConfig();
  
-        void setOS(uint16_t os);
+        void setOS(uint16_t os_);
         uint16_t getOS();
  
-        void setMode(uint16_t mode);
+        void setMode(uint16_t mode_);
         uint16_t getMode();
  
-        void setConfigurationRegister();
-        uint16_t getConfigurationRegister();
- 
-        void setConversionTime(uint16_t dr);
+        void setConversionTime(uint16_t dr_);
         uint16_t getConversionTime();
+
+        // void writeAdc();
     private:
+        uint8_t address;
+        int16_t writeRegister(uint8_t reg, uint16_t value);
+        uint16_t readRegister(uint8_t reg);
+        uint8_t buffer[3];
 };
 
 #endif
