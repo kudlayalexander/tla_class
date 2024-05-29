@@ -39,7 +39,7 @@ bool TLA2024::init(const char* i2c_path, uint8_t i2c_address) {
 };
  
 void TLA2024::prepareForReading(uint16_t mux, bool continuous) {
-    uint16_t config = 0x0000;
+    uint16_t config = 0x0003;
 
     if (continuous) {
         config |= REGISTER_CONFIG_MOD_CONTINUOUS;   
@@ -55,8 +55,6 @@ void TLA2024::prepareForReading(uint16_t mux, bool continuous) {
     config |= REGISTER_CONFIG_OS_SINGLE_CONVERSION;
 
     writeRegister(REGISTER_POINTER_CONFIGURATION, config);
-
-
     writeRegister(REGISTER_POINTER_LOWTHRESH, 0x0000);
     writeRegister(REGISTER_POINTER_HITHRESH, 0x8000);
 }
@@ -69,10 +67,10 @@ int16_t TLA2024::readAdc(uint16_t mux) {
     do {
         usleep(100000);
         reg_val = readRegister(REGISTER_POINTER_CONFIGURATION);
-	std::cout << "reg cfg: " << std::endl;
-        std::cout << std::hex << int(reg_val) << std::endl; // debug
+	    // std::cout << "reg cfg: " << std::endl;
+        // std::cout << std::hex << int(reg_val) << std::endl; // debug
 
-    } while (( reg_val & REGISTER_CONFIG_OS_MASK )!= 0);
+    } while (( reg_val & REGISTER_CONFIG_OS_MASK ) == 0);
 
     uint16_t result = readRegister(REGISTER_POINTER_CONVERSION) >> 4;
 
@@ -82,6 +80,7 @@ int16_t TLA2024::readAdc(uint16_t mux) {
     return (int16_t)result;
 }
 
+
 uint16_t TLA2024::readRegister(uint8_t reg) {
     if (write(this->i2c_fd, &reg, 1) != 1)
         return 0;
@@ -89,8 +88,8 @@ uint16_t TLA2024::readRegister(uint8_t reg) {
     if (read(this->i2c_fd, this->buffer, 2) != 2)
         return 0;
 
-    std::cout << "read reg: " << std::endl;
-    std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << std::endl; // debug
+    // std::cout << "read reg: " << std::endl;
+    // std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << std::endl; // debug
     return ((buffer[0] << 8) | buffer[1]);
 }
 
@@ -103,8 +102,8 @@ int16_t TLA2024::writeRegister(uint8_t reg, uint16_t data) {
         return -1;
     }
 
-    std::cout << "write reg: " << std::endl;
-    std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << " " << int(buffer[2]) << std::endl; // debug
+    // std::cout << "write reg: " << std::endl;
+    // std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << " " << int(buffer[2]) << std::endl; // debug
 
     return 3;
 }

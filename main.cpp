@@ -22,6 +22,25 @@ float convertFsrToInt(uint16_t fsr) {
     }
 }
 
+int convertDrToInt(uint16_t dr) {
+    switch(dr) {
+        case REGISTER_CONFIG_DR_128_SPS:
+            return 128;
+        case REGISTER_CONFIG_DR_250_SPS:
+            return 250;
+        case REGISTER_CONFIG_DR_490_SPS:
+            return 490;
+        case REGISTER_CONFIG_DR_1600_SPS:
+            return 1600;
+        case REGISTER_CONFIG_DR_2400_SPS:
+            return 2400;
+        case REGISTER_CONFIG_DR_3300_SPS:
+            return 3300;
+        default:
+            return 2400; 
+    }
+}
+
 int main() {
     TLA2024 *tla = new TLA2024();
     tla->init();
@@ -30,16 +49,19 @@ int main() {
     
     uint16_t adc0, adc1, adc2, adc3;
 
+    tla->setFullScaleRange(REGISTER_CONFIG_FSR_0_512V);
+    tla->setDataRate(REGISTER_CONFIG_DR_250_SPS);
+
     do {
         adc0 = tla->readAdc(REGISTER_CONFIG_MUX_0_GND);
         adc1 = tla->readAdc(REGISTER_CONFIG_MUX_1_GND);
         adc2 = tla->readAdc(REGISTER_CONFIG_MUX_2_GND);
         adc3 = tla->readAdc(REGISTER_CONFIG_MUX_3_GND);
 
-        std::cout << convertFsrToInt(adc0) << std::endl;
-        std::cout << convertFsrToInt(adc1) << std::endl;
-        std::cout << convertFsrToInt(adc2) << std::endl;
-        std::cout << convertFsrToInt(adc3) << std::endl;
+        std::cout << std::hex << "adc0: " << adc0 << std::endl;
+        std::cout << std::hex << "adc1: " << adc1 << std::endl;
+        std::cout << std::hex << "adc2: " << adc2 << std::endl;
+        std::cout << std::hex << "adc3: " << adc3 << std::endl;
 
         sleep(1);
     } while(true);
