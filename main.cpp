@@ -49,7 +49,7 @@ int main() {
     
     uint16_t adc0, adc1, adc2, adc3;
 
-    tla->setFullScaleRange(REGISTER_CONFIG_FSR_0_512V);
+    tla->setFullScaleRange(REGISTER_CONFIG_FSR_1_024V);
     tla->setDataRate(REGISTER_CONFIG_DR_250_SPS);
 
     do {
@@ -62,6 +62,17 @@ int main() {
         std::cout << std::hex << "adc1: " << adc1 << std::endl;
         std::cout << std::hex << "adc2: " << adc2 << std::endl;
         std::cout << std::hex << "adc3: " << adc3 << std::endl;
+
+
+        adc0 = tla->readAdc(REGISTER_CONFIG_MUX_0_1);
+        adc1 = tla->readAdc(REGISTER_CONFIG_MUX_0_3);
+        adc2 = tla->readAdc(REGISTER_CONFIG_MUX_1_3);
+        adc3 = tla->readAdc(REGISTER_CONFIG_MUX_2_3);
+
+        std::cout << std::hex << "adc0_1: " << adc0 << std::endl;
+        std::cout << std::hex << "adc0_3: " << adc1 << std::endl;
+        std::cout << std::hex << "adc1_3: " << adc2 << std::endl;
+        std::cout << std::hex << "adc2_3: " << adc3 << std::endl;
 
         sleep(1);
     } while(true);
