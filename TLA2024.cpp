@@ -67,9 +67,10 @@ int16_t TLA2024::readAdc(uint16_t mux) {
     conversion_time = getConversionTime();
     uint16_t reg_val ;
     do {
-        usleep(conversion_time);
+        usleep(100000);
         reg_val = readRegister(REGISTER_POINTER_CONFIGURATION);
-        std::cout << std::hex << reg_val << std::dec << std::endl; // debug
+	std::cout << "reg cfg: " << std::endl;
+        std::cout << std::hex << int(reg_val) << std::endl; // debug
 
     } while (( reg_val & REGISTER_CONFIG_OS_MASK )!= 0);
 
@@ -88,7 +89,8 @@ uint16_t TLA2024::readRegister(uint8_t reg) {
     if (read(this->i2c_fd, this->buffer, 2) != 2)
         return 0;
 
-    std::cout << "read reg: " << buffer[0] << buffer[1] << std::endl; // debug
+    std::cout << "read reg: " << std::endl;
+    std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << std::endl; // debug
     return ((buffer[0] << 8) | buffer[1]);
 }
 
@@ -101,7 +103,8 @@ int16_t TLA2024::writeRegister(uint8_t reg, uint16_t data) {
         return -1;
     }
 
-    std::cout << "read reg: " << buffer[0] << buffer[1] << buffer[2] << std::endl; // debug
+    std::cout << "write reg: " << std::endl;
+    std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << " " << int(buffer[2]) << std::endl; // debug
 
     return 3;
 }
