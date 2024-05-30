@@ -108,15 +108,6 @@
 #define TLA2024_H
 
 class TLA2024 {
-    protected:
-        int i2c_fd;
-        uint16_t dr;
-        uint16_t fsr;
-        uint16_t mux;
-        uint16_t mode;
-        uint16_t os;
-        uint16_t conversion_time;
- 
     public:
     
         TLA2024();
@@ -165,8 +156,17 @@ class TLA2024 {
         void setConversionTime(uint16_t dr_);
         uint16_t getConversionTime();
 
-        // void writeAdc();
+        // 12-bit long input with value of voltage
+        float calculateVoltage(uint16_t voltage_bits);
     private:
+        int i2c_fd;
+        uint16_t dr;
+        uint16_t fsr;
+        uint16_t mux;
+        uint16_t mode;
+        uint16_t os;
+        uint16_t conversion_time;
+
         uint8_t address;
         int16_t writeRegister(uint8_t reg, uint16_t value);
         uint16_t readRegister(uint8_t reg);

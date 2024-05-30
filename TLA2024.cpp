@@ -11,7 +11,7 @@ TLA2024::TLA2024() {
     mux = REGISTER_CONFIG_MUX_0_1;
     mode = REGISTER_CONFIG_MOD_SINGLE;
     os = REGISTER_CONFIG_OS_SINGLE_CONVERSION;
-    conversion_time = getConversionTime();
+    setConversionTime(dr);
 }
 
 bool TLA2024::init(const char* i2c_path, uint8_t i2c_address) {
@@ -24,12 +24,12 @@ bool TLA2024::init(const char* i2c_path, uint8_t i2c_address) {
 
     if (this->i2c_fd < 0) {
         std::cout << "Unable to open file descriptor" << std::endl;
-        return -1;
+        return 0;
     }
     else {
         if (ioctl(this->i2c_fd, I2C_SLAVE, i2c_address) < 0) {
             std::cout << "File descriptor doesn't exist" << std::endl;
-            return -1;
+            return 0;
         }
 
         std::cout << "File descriptor successfully opened;" << std::endl;
@@ -64,11 +64,10 @@ int16_t TLA2024::readAdc(uint16_t mux) {
 
     conversion_time = getConversionTime();
     uint16_t reg_val ;
+
     do {
-        usleep(100000);
+        usleep(conversion_time);
         reg_val = readRegister(REGISTER_POINTER_CONFIGURATION);
-	    // std::cout << "reg cfg: " << std::endl;
-        // std::cout << std::hex << int(reg_val) << std::endl; // debug
 
     } while (( reg_val & REGISTER_CONFIG_OS_MASK ) == 0);
 
@@ -88,8 +87,6 @@ uint16_t TLA2024::readRegister(uint8_t reg) {
     if (read(this->i2c_fd, this->buffer, 2) != 2)
         return 0;
 
-    // std::cout << "read reg: " << std::endl;
-    // std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << std::endl; // debug
     return ((buffer[0] << 8) | buffer[1]);
 }
 
@@ -101,9 +98,6 @@ int16_t TLA2024::writeRegister(uint8_t reg, uint16_t data) {
     if (write(this->i2c_fd, this->buffer, 3) != 3) {
         return -1;
     }
-
-    // std::cout << "write reg: " << std::endl;
-    // std::cout << std::hex << int(buffer[0]) << " "<< int(buffer[1]) << " " << int(buffer[2]) << std::endl; // debug
 
     return 3;
 }
@@ -119,20 +113,28 @@ void TLA2024::setConversionTime(uint16_t dr) {
     switch (dr) {
         case (REGISTER_CONFIG_DR_128_SPS):
             conversion_time = 1000000 / 128 + 5;
+            break;
         case (REGISTER_CONFIG_DR_250_SPS):
             conversion_time = 1000000 / 250 + 5;
+            break;
         case (REGISTER_CONFIG_DR_490_SPS):
             conversion_time = 1000000 / 490 + 5;
+            break;
         case (REGISTER_CONFIG_DR_920_SPS):
             conversion_time = 1000000 / 920 + 5;
+            break;
         case (REGISTER_CONFIG_DR_1600_SPS):
             conversion_time = 1000000 / 1600 + 5;
+            break;
         case (REGISTER_CONFIG_DR_2400_SPS):
             conversion_time = 1000000 / 2400 + 5;
+            break;
         case (REGISTER_CONFIG_DR_3300_SPS):
             conversion_time = 1000000 / 3300 + 5;
+            break;
         default:
             conversion_time = 625;
+            break;
     }
  
     conversion_time = (uint16_t)(conversion_time * 1.1);
@@ -176,4 +178,49 @@ void TLA2024::setMode(uint16_t mode_) {
  
 uint16_t TLA2024::getMode() {
     return mode;
+}
+
+float TLA2024::calculateVoltage(uint16_t voltage_bits) {
+    if (voltage_bits == 0x800) return 0;
+
+    uint16_t sign_mask = 0x800;
+    uint16_t numbers_mask = 0x7FF;
+
+    bool negative = (sign_mask & voltage_bits) >> 11;
+    voltage_bits &= numbers_mask;
+
+    float voltage_real;
+    float max_voltage;
+
+    switch(this->fsr) {
+        case REGISTER_CONFIG_FSR_0_256V:
+            max_voltage = 0.256f;
+            break;
+        case REGISTER_CONFIG_FSR_0_512V:
+            max_voltage = 0.512f;
+            break;
+        case REGISTER_CONFIG_FSR_1_024V:
+            max_voltage = 1.024f;
+            break;
+        case REGISTER_CONFIG_FSR_2_048V:
+            max_voltage = 2.048f;
+            break;
+        case REGISTER_CONFIG_FSR_4_096V:
+            max_voltage = 4.096f;
+            break;
+        case REGISTER_CONFIG_FSR_6_144V:
+            max_voltage = 6.144f;
+            break;
+        default:
+            max_voltage = 2.048f;
+            break;
+    }
+
+    voltage_real = voltage_bits * max_voltage / 2047;
+
+    if (negative) {
+        voltage_real = voltage_real * (-1.0f);
+    }
+
+    return voltage_real;
 }
