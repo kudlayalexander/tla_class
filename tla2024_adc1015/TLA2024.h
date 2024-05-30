@@ -17,6 +17,68 @@
 #define TLA2024_H
 
 class TLA2024 {
+    private:
+        int i2cFd;
+        uint16_t dr;
+        uint16_t fsr;
+        uint16_t mux;
+        uint16_t mode;
+        uint16_t os;
+        uint16_t conversionTime;
+
+        uint8_t address;
+
+    private:
+        int16_t writeRegister(uint8_t reg, uint16_t value);
+        uint16_t readRegister(uint8_t reg);
+
+        void setConfiguration(uint16_t mux, bool continuous);
+    
+    public:
+        TLA2024();
+
+        bool connectToSlave(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
+        void disconnect();
+
+        int16_t readAdc(uint16_t mux);
+
+        int16_t getLastConversion();
+ 
+        void setFullScaleRange(uint16_t fsr_);
+        uint16_t getFullScaleRange();
+ 
+        void setDataRate(uint16_t dr_);
+        uint16_t getDataRate();
+ 
+        void setMultiplexerConfig(uint16_t mux_);
+        uint16_t getMultiplexerConfig();
+ 
+        void setOS(uint16_t os_);
+        uint16_t getOS();
+ 
+        void setMode(uint16_t mode_);
+        uint16_t getMode();
+ 
+        void setConversionTime(uint16_t dr_);
+        uint16_t getConversionTime();
+
+        // 12-bit long input with value of voltage in binary
+        float calculateVoltage(uint16_t voltageBits);
+
+    private:
+        enum RegisterPointer {
+            REGISTER_POINTER_MASK = 0x03,
+            REGISTER_POINTER_CONVERSION = 0x00,
+            REGISTER_POINTER_CONFIGURATION = 0x01,
+            REGISTER_POINTER_LOWTHRESH = 0x02,
+            REGISTER_POINTER_HITHRESH = 0x03
+        };
+
+        enum RegisterConfigReserved {
+            RESERVED_MASK = 0x001F,
+            RESERVED_ALWAYS = 0x0003
+        };
+
     public:
         enum OperationSystem {
             OS_MASK =  0X8000,
@@ -68,63 +130,6 @@ class TLA2024 {
             I2C_ADDRESS_1 = 0x48,
             I2C_ADDRESS_2 = 0x49,
             I2C_ADDRESS_3 = 0x4B
-        };
-
-        TLA2024();
-
-        bool connectToSlave(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
-        void disconnect();
-
-        void prepareForReading(uint16_t mux, bool continuous);
-        int16_t readAdc(uint16_t mux);
-
-        int16_t getLastConversion();
- 
-        void setFullScaleRange(uint16_t fsr_);
-        uint16_t getFullScaleRange();
- 
-        void setDataRate(uint16_t dr_);
-        uint16_t getDataRate();
- 
-        void setMultiplexerConfig(uint16_t mux_);
-        uint16_t getMultiplexerConfig();
- 
-        void setOS(uint16_t os_);
-        uint16_t getOS();
- 
-        void setMode(uint16_t mode_);
-        uint16_t getMode();
- 
-        void setConversionTime(uint16_t dr_);
-        uint16_t getConversionTime();
-
-        // 12-bit long input with value of voltage in binary
-        float calculateVoltage(uint16_t voltageBits);
-    private:
-        int i2cFd;
-        uint16_t dr;
-        uint16_t fsr;
-        uint16_t mux;
-        uint16_t mode;
-        uint16_t os;
-        uint16_t conversionTime;
-
-        uint8_t address;
-        int16_t writeRegister(uint8_t reg, uint16_t value);
-        uint16_t readRegister(uint8_t reg);
-        uint8_t buffer[3];
-
-        enum RegisterPointer {
-            REGISTER_POINTER_MASK = 0x03,
-            REGISTER_POINTER_CONVERSION = 0x00,
-            REGISTER_POINTER_CONFIGURATION = 0x01,
-            REGISTER_POINTER_LOWTHRESH = 0x02,
-            REGISTER_POINTER_HITHRESH = 0x03
-        };
-
-        enum RegisterConfigReserved {
-            RESERVED_MASK = 0x001F,
-            RESERVED_ALWAYS = 0x0003
         };
 };
 

@@ -45,7 +45,7 @@ void TLA2024::disconnect() {
     std::cout << "File descriptor was closed" << std::endl;
 };
 
-void TLA2024::prepareForReading(uint16_t mux_, bool continuous) {
+void TLA2024::setConfiguration(uint16_t mux_, bool continuous) {
     uint16_t config = RESERVED_ALWAYS;
 
     if (continuous) {
@@ -67,10 +67,10 @@ void TLA2024::prepareForReading(uint16_t mux_, bool continuous) {
 }
 
 int16_t TLA2024::readAdc(uint16_t mux) {
-    prepareForReading(mux, false);
+    setConfiguration(mux, false);
 
     conversionTime = getConversionTime();
-    uint16_t regVal ;
+    uint16_t regVal;
 
     do {
         usleep(conversionTime);
@@ -88,21 +88,24 @@ int16_t TLA2024::readAdc(uint16_t mux) {
 
 
 uint16_t TLA2024::readRegister(uint8_t reg) {
-    if (write(this->i2cFd, &reg, 1) != 1)
+    uint8_t buffer[3];
+
+    if (write(i2cFd, &reg, 1) != 1)
         return 0;
 
-    if (read(this->i2cFd, this->buffer, 2) != 2)
+    if (read(i2cFd, buffer, 2) != 2)
         return 0;
 
     return ((buffer[0] << 8) | buffer[1]);
 }
 
 int16_t TLA2024::writeRegister(uint8_t reg, uint16_t data) {
-    this->buffer[0] = reg;
-    this->buffer[1] = (uint8_t)(data >> 8);
-    this->buffer[2] = (uint8_t)(data & 0x00FF);
+    uint8_t buffer[3];
+    buffer[0] = reg;
+    buffer[1] = (uint8_t)(data >> 8);
+    buffer[2] = (uint8_t)(data & 0x00FF);
 
-    if (write(this->i2cFd, this->buffer, 3) != 3) {
+    if (write(i2cFd, buffer, 3) != 3) {
         return -1;
     }
 
