@@ -11,14 +11,15 @@ int main() {
     
     uint16_t adc0, adc1, adc2, adc3, adc0_1, adc0_3, adc1_3, adc2_3;
 
-    tla->setFullScaleRange(REGISTER_CONFIG_FSR_2_048V);
-    tla->setDataRate(REGISTER_CONFIG_DR_1600_SPS);
+    
+    tla->setFullScaleRange(tla->FSR_2_048V);
+    tla->setDataRate(tla->DR_1600_SPS);
 
     do {
-        adc0 = tla->readAdc(REGISTER_CONFIG_MUX_0_GND);
-        adc1 = tla->readAdc(REGISTER_CONFIG_MUX_1_GND);
-        adc2 = tla->readAdc(REGISTER_CONFIG_MUX_2_GND);
-        adc3 = tla->readAdc(REGISTER_CONFIG_MUX_3_GND);
+        adc0 = tla->readAdc(tla->MUX_0_GND);
+        adc1 = tla->readAdc(tla->MUX_1_GND);
+        adc2 = tla->readAdc(tla->MUX_2_GND);
+        adc3 = tla->readAdc(tla->MUX_3_GND);
 
         std::cout << std::hex << "adc0: " << adc0 << std::dec << std::endl;
         std::cout << std::hex << "adc1: " << adc1 << std::dec <<  std::endl;
@@ -35,10 +36,10 @@ int main() {
         std::cout << "-----------------------------" << std::endl;
         std::cout << "-----------------------------" << std::endl;
 
-        adc0_1 = tla->readAdc(REGISTER_CONFIG_MUX_0_1);
-        adc0_3 = tla->readAdc(REGISTER_CONFIG_MUX_0_3);
-        adc1_3 = tla->readAdc(REGISTER_CONFIG_MUX_1_3);
-        adc2_3 = tla->readAdc(REGISTER_CONFIG_MUX_2_3);
+        adc0_1 = tla->readAdc(tla->MUX_0_1);
+        adc0_3 = tla->readAdc(tla->MUX_0_3);
+        adc1_3 = tla->readAdc(tla->MUX_1_3);
+        adc2_3 = tla->readAdc(tla->MUX_2_3);
 
         std::cout << std::hex << "adc0_1: " << adc0_1 << std::endl;
         std::cout << std::hex << "adc0_3: " << adc0_3 << std::endl;
