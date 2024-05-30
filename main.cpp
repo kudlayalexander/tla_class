@@ -6,8 +6,6 @@
 int main() {
     std::unique_ptr<TLA2024> tla {std::make_unique<TLA2024>()};
     tla->init();
-
-    std::cout << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << tla->getMode() << std::nouppercase << std::dec  << std::endl;
     
     uint16_t adc0, adc1, adc2, adc3, adc0_1, adc0_3, adc1_3, adc2_3;
 
