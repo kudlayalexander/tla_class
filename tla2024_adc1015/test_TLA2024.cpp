@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "tla2024_adc1015/TLA2024.h"
-
+#include "TLA2024.h"
 
 int main() {
 

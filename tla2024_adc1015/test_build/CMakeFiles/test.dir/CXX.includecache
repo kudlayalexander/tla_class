@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/TLA2024.h
+stdint.h
+-
+fcntl.h
+-
+stddef.h
+-
+stdint.h
+-
+stdlib.h
+-
+stdio.h
+-
+errno.h
+-
+linux/i2c-dev.h
+-
+sys/ioctl.h
+-
+unistd.h
+-
+
+/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/test_TLA2024.cpp
+iostream
+-
+iomanip
+-
+TLA2024.h
+/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/TLA2024.h
+
