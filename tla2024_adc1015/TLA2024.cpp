@@ -14,7 +14,7 @@ TLA2024::TLA2024() {
     setConversionTime(dr);
 }
 
-bool TLA2024::init(const char* i2cPath, uint8_t i2cAddress) {
+bool TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddress) {
     if (i2cFd > 0) {
         close(i2cFd);
     }
@@ -37,7 +37,14 @@ bool TLA2024::init(const char* i2cPath, uint8_t i2cAddress) {
 
     return 1;
 };
- 
+
+void TLA2024::disconnect() {
+    if (i2cFd > 0) {
+        close(i2cFd);
+    }
+    std::cout << "File descriptor was closed" << std::endl;
+};
+
 void TLA2024::prepareForReading(uint16_t mux_, bool continuous) {
     uint16_t config = RESERVED_ALWAYS;
 

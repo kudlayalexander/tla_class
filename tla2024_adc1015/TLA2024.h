@@ -72,8 +72,9 @@ class TLA2024 {
 
         TLA2024();
 
-        bool init(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
-        
+        bool connectToSlave(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
+        void disconnect();
+
         void prepareForReading(uint16_t mux, bool continuous);
         int16_t readAdc(uint16_t mux);
 
