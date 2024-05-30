@@ -112,7 +112,7 @@ class TLA2024 {
     
         TLA2024();
 
-        bool init(const char *i2c_path = I2C_DEFAULT_PATH, uint8_t i2c_address = I2C_ADDRESS_1);
+        bool init(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
         
         /*  
         Read the conversion data register or configuration register
@@ -157,15 +157,15 @@ class TLA2024 {
         uint16_t getConversionTime();
 
         // 12-bit long input with value of voltage
-        float calculateVoltage(uint16_t voltage_bits);
+        float calculateVoltage(uint16_t voltageBits);
     private:
-        int i2c_fd;
+        int i2cFd;
         uint16_t dr;
         uint16_t fsr;
         uint16_t mux;
         uint16_t mode;
         uint16_t os;
-        uint16_t conversion_time;
+        uint16_t conversionTime;
 
         uint8_t address;
         int16_t writeRegister(uint8_t reg, uint16_t value);
