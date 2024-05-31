@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtemperature_sensor.a  CMakeFiles/temperature_sensor.dir/temperature_sensor.cpp.o
-/usr/bin/ranlib libtemperature_sensor.a
