@@ -1,59 +1,39 @@
 #include <iostream>
 #include <iomanip>
 #include "tla2024_adc1015/TLA2024.h"
+#include "temperature_sensor/temperature_sensor.h"
 
-
-int main() {
-
+void test(uint16_t channel) {
     std::unique_ptr<TLA2024> tla {std::make_unique<TLA2024>()};
     tla->connectToSlave();
-    
-    uint16_t adc0, adc1, adc2, adc3, adc0_1, adc0_3, adc1_3, adc2_3;
-
-    
-    tla->setFullScaleRange(tla->FSR_2_048V);
+    tla->setFullScaleRange(tla->FSR_4_096V);
     tla->setDataRate(tla->DR_1600_SPS);
 
+    std::unique_ptr<TemperatureSensor> sensor {std::make_unique<TemperatureSensor>()};
+    
+    uint16_t voltageInBits = tla->readAdc(channel);
+    channel >>=12;
+    float voltage = tla->calculateVoltage(voltageInBits);
+    sensor->setVoltage(voltage);
+    float temperature = sensor->getTemperature();
+    float resistance = sensor->getResistance();
+
+    std::cout << "Voltage on channel " << channel << " : " << std::fixed << std::setprecision(2) << voltage << std::scientific << std::endl;
+    std::cout << "Temperature on channel " << channel << " : " << std::fixed << std::setprecision(2) << temperature << std::scientific << std::endl;
+    std::cout << "Resistance on channel " << channel << " : " << std::fixed << std::setprecision(2) << resistance << std::scientific << std::endl;
+    std::cout << std::endl;
+}
+
+int main() {
     do {
-        adc0 = tla->readAdc(tla->MUX_0_GND);
-        adc1 = tla->readAdc(tla->MUX_1_GND);
-        adc2 = tla->readAdc(tla->MUX_2_GND);
-        adc3 = tla->readAdc(tla->MUX_3_GND);
-
-        std::cout << std::hex << "adc0: " << adc0 << std::dec << std::endl;
-        std::cout << std::hex << "adc1: " << adc1 << std::dec <<  std::endl;
-        std::cout << std::hex << "adc2: " << adc2 << std::dec <<  std::endl;
-        std::cout << std::hex << "adc3: " << adc3 << std::dec <<  std::endl;
-
-        std::cout << std::endl;
-
-        std::cout << std::fixed << std::setprecision(3) << tla->calculateVoltage(adc0) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc1) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc2) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc3) << std::endl;
-
-        std::cout << "-----------------------------" << std::endl;
-        std::cout << "-----------------------------" << std::endl;
-
-        adc0_1 = tla->readAdc(tla->MUX_0_1);
-        adc0_3 = tla->readAdc(tla->MUX_0_3);
-        adc1_3 = tla->readAdc(tla->MUX_1_3);
-        adc2_3 = tla->readAdc(tla->MUX_2_3);
-
-        std::cout << std::hex << "adc0_1: " << adc0_1 << std::endl;
-        std::cout << std::hex << "adc0_3: " << adc0_3 << std::endl;
-        std::cout << std::hex << "adc1_3: " << adc1_3 << std::endl;
-        std::cout << std::hex << "adc2_3: " << adc2_3 << std::endl;
-
-        std::cout << std::endl;
-
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc0_1) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc0_3) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc1_3) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc2_3) << std::endl;
-
-        std::cout << "-----------------------------" << std::endl;
-        std::cout << "-----------------------------" << std::endl;
+        test(TLA2024::MUX_0_GND);
+        test(TLA2024::MUX_1_GND);
+        test(TLA2024::MUX_2_GND);
+        test(TLA2024::MUX_3_GND);
+        test(TLA2024::MUX_0_1);
+        test(TLA2024::MUX_0_3);
+        test(TLA2024::MUX_1_3);
+        test(TLA2024::MUX_2_3);
 
         sleep(1);
     } while(true);

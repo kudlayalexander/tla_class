@@ -3,6 +3,10 @@
 
 TemperatureSensor::TemperatureSensor() {};
 
+TemperatureSensor::TemperatureSensor(float voltage_) {
+    voltage = voltage_;
+}
+
 float TemperatureSensor::getTemperature() {
     return static_cast<float>(calculateTemperature());
 };

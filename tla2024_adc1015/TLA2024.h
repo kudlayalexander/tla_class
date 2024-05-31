@@ -32,7 +32,7 @@ class TLA2024 {
         int16_t writeRegister(uint8_t reg, uint16_t value);
         uint16_t readRegister(uint8_t reg);
 
-        void setConfiguration(uint16_t mux, bool continuous);
+        void setConfiguration(bool continuous);
     
     public:
         TLA2024();

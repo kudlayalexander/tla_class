@@ -45,7 +45,7 @@ void TLA2024::disconnect() {
     std::cout << "File descriptor was closed" << std::endl;
 };
 
-void TLA2024::setConfiguration(uint16_t mux_, bool continuous) {
+void TLA2024::setConfiguration(bool continuous) {
     uint16_t config = RESERVED_ALWAYS;
 
     if (continuous) {
@@ -57,7 +57,7 @@ void TLA2024::setConfiguration(uint16_t mux_, bool continuous) {
 
     config |= fsr;
     config |= dr;
-    config |= mux_;
+    config |= mux;
 
     config |= OS_SINGLE_CONVERSION;
 
@@ -66,8 +66,9 @@ void TLA2024::setConfiguration(uint16_t mux_, bool continuous) {
     writeRegister(REGISTER_POINTER_HITHRESH, 0x8000);
 }
 
-int16_t TLA2024::readAdc(uint16_t mux) {
-    setConfiguration(mux, false);
+int16_t TLA2024::readAdc(uint16_t mux_) {
+    setMultiplexerConfig(mux_);
+    setConfiguration(false);
 
     conversionTime = getConversionTime();
     uint16_t regVal;

@@ -3,10 +3,11 @@ class TemperatureSensor {
         float voltage;
     public:
         TemperatureSensor();
+        TemperatureSensor(float voltage_);
         float getTemperature();
         float getResistance();
         float getVoltage();
-        void setVoltage(float voltage);
+        void setVoltage(float voltage_);
     private:
         float calculateTemperature();
         float calculateResistance();
