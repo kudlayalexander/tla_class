@@ -1,4 +1,0 @@
-/root/tla_class/tla_class/build/CMakeFiles/edit_cache.dir
-/root/tla_class/tla_class/build/CMakeFiles/main.dir
-/root/tla_class/tla_class/build/CMakeFiles/rebuild_cache.dir
-/root/tla_class/tla_class/build/CMakeFiles/lib.dir
