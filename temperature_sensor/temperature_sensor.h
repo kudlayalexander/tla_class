@@ -15,7 +15,7 @@ class TemperatureSensor {
 
         enum Temperature {
             MAX_TEMPERATURE = 85,
-            MIN_TEMPERATURE = 40
+            MIN_TEMPERATURE = -40
         };
 
         enum Resistance {
