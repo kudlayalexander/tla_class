@@ -22,18 +22,13 @@ void test(uint16_t channel) {
     std::cout << "Temperature on channel " << channel << " : " << std::fixed << std::setprecision(2) << temperature << std::scientific << std::endl;
     std::cout << "Resistance on channel " << channel << " : " << std::fixed << std::setprecision(2) << resistance << std::scientific << std::endl;
     std::cout << std::endl;
+
+    tla->disconnect();
 }
 
 int main() {
     do {
-        test(TLA2024::MUX_0_GND);
         test(TLA2024::MUX_1_GND);
-        test(TLA2024::MUX_2_GND);
-        test(TLA2024::MUX_3_GND);
-        test(TLA2024::MUX_0_1);
-        test(TLA2024::MUX_0_3);
-        test(TLA2024::MUX_1_3);
-        test(TLA2024::MUX_2_3);
 
         sleep(1);
     } while(true);
