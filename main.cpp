@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "tla2024_adc1015/TLA2024.h"
-#include "temperature_sensor/temperature_sensor.h"
+#include "sensor/sensor.h"
 
 void test(uint16_t channel) {
     std::unique_ptr<TLA2024> tla {std::make_unique<TLA2024>()};
@@ -9,7 +9,7 @@ void test(uint16_t channel) {
     tla->setFullScaleRange(tla->FSR_4_096V);
     tla->setDataRate(tla->DR_1600_SPS);
 
-    std::unique_ptr<TemperatureSensor> sensor {std::make_unique<TemperatureSensor>()};
+    std::unique_ptr<Sensor> sensor {std::make_unique<Sensor>()};
     
     uint16_t voltageInBits = tla->readAdc(channel);
     channel >>=12;

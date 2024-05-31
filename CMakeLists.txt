@@ -5,8 +5,8 @@ project(
     LANGUAGES CXX)
 
 add_library(tla2024 tla2024_adc1015/TLA2024.cpp tla2024_adc1015/TLA2024.h)
-add_library(temperature_sensor temperature_sensor/temperature_sensor.cpp temperature_sensor/temperature_sensor.h)
+add_library(sensor sensor/sensor.cpp sensor/sensor.h)
 
 add_executable(main main.cpp)
 
-target_link_libraries(main PRIVATE tla2024 temperature_sensor)
+target_link_libraries(main PRIVATE tla2024 sensor)
