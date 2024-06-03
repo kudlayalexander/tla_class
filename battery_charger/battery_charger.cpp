@@ -29,41 +29,46 @@ void BatteryCharger::start(const char* i2cPath) {
         isConnectedToBattery = battery.connectToSlave(i2cPath);
     }
 
-    while(batteryIsPowerSource()) {
-        std::this_thread::sleep_for(std::chrono::hours(g));
-        continue;
+    while(true) {
+        if (batteryIsPowerSource()) {
+            std::this_thread::sleep_for(std::chrono::hours(g));
+            continue;
+        }
+        else {
+            while (batteryNeedsCharge()) {
+                if (isTemperatureInRange(MIN_TEMPERATURE, MAX_TEMPERATURE)) {
+                    allowCharging();
 
-        while (batteryNeedsCharge()) {
-            if (isTemperatureInRange(MIN_TEMPERATURE, MAX_TEMPERATURE)) {
-                allowCharging();
+                    while (voltage < h) {
+                        std::this_thread::sleep_for(std::chrono::hours(j));
+                        measureCurrentVoltageAndTemperature();
+                    }
 
-                while (voltage < h) {
-                    std::this_thread::sleep_for(std::chrono::hours(j));
-                    measureCurrentVoltageAndTemperature();
-                }   
-            }
-            else {
-                if (isTemperatureLower(MIN_TEMPERATURE)) {
-                    startWarming();
-                    std::this_thread::sleep_for(std::chrono::hours(b));
-                    measureCurrentVoltageAndTemperature();
-
+                    prohibitCharging();
+                }
+                else {
                     if (isTemperatureLower(MIN_TEMPERATURE)) {
-                        std::this_thread::sleep_for(std::chrono::hours(c));
+                        startWarming();
+                        std::this_thread::sleep_for(std::chrono::hours(b));
+                        measureCurrentVoltageAndTemperature();
+
+                        if (isTemperatureLower(MIN_TEMPERATURE)) {
+                            std::this_thread::sleep_for(std::chrono::hours(c));
+                        }
+                        else {
+                            std::this_thread::sleep_for(std::chrono::hours(f));
+                        }
+                        endWarming();
                     }
-                    else {
-                        std::this_thread::sleep_for(std::chrono::hours(f));
+                    else if (isTemperatureHigher(MAX_TEMPERATURE)) {
+                        std::this_thread::sleep_for(std::chrono::hours(j));
                     }
-                    endWarming();
                 }
-                else if (isTemperatureHigher(MAX_TEMPERATURE)) {
-                    std::this_thread::sleep_for(std::chrono::hours(j));
-                }
+            }   
+            if (!batteryNeedsCharge()) {
+                std::this_thread::sleep_for(std::chrono::hours(e));
             }
         }
-        
-        std::this_thread::sleep_for(std::chrono::hours(e));
-        continue;
     } 
 }
 
