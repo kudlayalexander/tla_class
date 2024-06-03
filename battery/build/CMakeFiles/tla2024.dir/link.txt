@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar-11 qc libtla2024.a CMakeFiles/tla2024.dir/home/couldlie/vscode_projs/tla2024/tla2024_adc1015/TLA2024.cpp.o
+/usr/bin/llvm-ranlib-11 libtla2024.a

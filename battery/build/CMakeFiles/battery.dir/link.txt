@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar-11 qc libbattery.a CMakeFiles/battery.dir/battery.cpp.o
+/usr/bin/llvm-ranlib-11 libbattery.a

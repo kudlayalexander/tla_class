@@ -2,6 +2,8 @@
 
 Battery::Battery() {
     adc = TLA2024();
+    adc.setFullScaleRange(TLA2024::FSR_4_096V);
+    adc.setMultiplexerConfig(TLA2024::MUX_0_GND);
     i2cPath = I2C_DEFAULT_PATH;
 }
 
@@ -11,7 +13,7 @@ Battery::Battery(const TLA2024 &adc_, const char *i2cPath_) {
 };
 
 float Battery::getTemperature() {
-    float voltage = adc.readVoltage(TLA2024::MUX_0_GND);
+    float voltage = adc.readVoltage(TLA2024::MUX_1_GND);
     return calculateTemperature(voltage);
 }
 
@@ -20,9 +22,13 @@ float Battery::getVoltage() {
     return voltage;
 }
 
-float Battery::getResistance() {
-    float voltage = adc.readVoltage(TLA2024::MUX_0_GND);
-    return calculateResistance(voltage);
+void Battery::connectBattery() {
+    adc.connectToSlave(i2cPath);
+}
+
+void Battery::connectBattery(const char* i2cPath_) {
+    i2cPath = i2cPath_;
+    adc.connectToSlave(i2cPath);
 }
 
 bool Battery::isBatteryConnected() {
@@ -44,7 +50,7 @@ float Battery::calculateTemperature(float voltage) {
     int coeffs_len = 8;
 
     // https://colab.research.google.com/drive/1yGktFqW0doqNn0V1L1ZOb1zqJbIHToTf?usp=sharing
-    long double temperatureRegressionCoeffs[coeffs_len] = {5434.23211731408810010180,
+    long double temperatureRegressionCoeffs[8] = {5434.23211731408810010180,
                                                 -20169.46624602146766847000,
                                                 32463.93311104805616196245,
                                                 -28938.22679970147873973474,
@@ -61,9 +67,9 @@ float Battery::calculateResistance(float voltage) {
     if (voltage > 2.82) return MAX_RESISTANCE;
 
     int coeffs_len = 17;
-
+    
     // https://colab.research.google.com/drive/1yGktFqW0doqNn0V1L1ZOb1zqJbIHToTf?usp=sharing
-    long double resistanceRegressionCoeffs[coeffs_len] = {2632885515.13546800613403320312,
+    long double resistanceRegressionCoeffs[17] = {2632885515.13546800613403320312,
                                                 -17311600570.38995361328125000000,
                                                 47184509415.49579620361328125000,
                                                 -63846048453.61897277832031250000,

@@ -1,0 +1,5 @@
+/home/couldlie/vscode_projs/tla2024/battery/build/CMakeFiles/battery.dir
+/home/couldlie/vscode_projs/tla2024/battery/build/CMakeFiles/tla2024.dir
+/home/couldlie/vscode_projs/tla2024/battery/build/CMakeFiles/test.dir
+/home/couldlie/vscode_projs/tla2024/battery/build/CMakeFiles/edit_cache.dir
+/home/couldlie/vscode_projs/tla2024/battery/build/CMakeFiles/rebuild_cache.dir

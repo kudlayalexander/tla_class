@@ -10,11 +10,13 @@ class Battery {
 
         float getTemperature();
         float getVoltage();
-        float getResistance();
         bool isBatteryConnected();
 
         void setAdc(const TLA2024 &adc);
         void setI2CPath(const char* i2cPath);
+
+        void connectBattery();
+        void connectBattery(const char* i2cPath);
     private:
         float calculateTemperature(float voltage);
         float calculateResistance(float voltage);

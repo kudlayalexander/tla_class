@@ -26,10 +26,10 @@ int main() {
 
         std::cout << std::endl;
 
-        std::cout << std::fixed << std::setprecision(3) << tla->calculateVoltage(adc0) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc1) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc2) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc3) << std::endl;
+        std::cout << std::fixed << std::setprecision(3) << tla->readVoltage(tla->MUX_0_GND) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_1_GND) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_2_GND) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_3_GND) << std::endl;
 
         std::cout << "-----------------------------" << std::endl;
         std::cout << "-----------------------------" << std::endl;
@@ -46,10 +46,10 @@ int main() {
 
         std::cout << std::endl;
 
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc0_1) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc0_3) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc1_3) << std::endl;
-        std::cout << std::fixed <<  std::setprecision(3) << tla->calculateVoltage(adc2_3) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_0_1) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_0_3) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_1_3) << std::endl;
+        std::cout << std::fixed <<  std::setprecision(3) << tla->readVoltage(tla->MUX_2_3) << std::endl;
 
         std::cout << "-----------------------------" << std::endl;
         std::cout << "-----------------------------" << std::endl;

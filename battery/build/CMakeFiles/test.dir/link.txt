@@ -1,0 +1,1 @@
+/usr/bin/clang++-11 --target=arm-linux-gnueabihf --gcc-toolchain=/opt/arm_gcc --sysroot=/opt/arm_gcc_sysroot/sysroot -O3 -DNDEBUG -fuse-ld=lld CMakeFiles/test.dir/test_battery.cpp.o -o test  libbattery.a libtla2024.a
