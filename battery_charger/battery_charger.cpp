@@ -1,13 +1,16 @@
 #include "battery_charger.h"
-BatteryCharger::BatteryCharger(const TLA2024 &battery_, const Sensor &sensor_) {
+
+BatteryCharger::BatteryCharger() {
+    battery = Battery();
+    channel = TLA2024::MUX_0_GND;
+}
+BatteryCharger::BatteryCharger(const Battery &battery_) {
     battery = battery_;
-    sensor = sensor_;
     channel = TLA2024::MUX_0_GND;
 }
 
-BatteryCharger::BatteryCharger(const TLA2024 &battery_, const Sensor &sensor_, uint16_t channel_ = TLA2024::MUX_0_GND, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
+BatteryCharger::BatteryCharger(const Battery &battery_, uint16_t channel_ = TLA2024::MUX_0_GND, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
     battery = battery_;
-    sensor = sensor_;
     channel = channel_;
     a = a_;
     b = b_;
@@ -24,11 +27,11 @@ BatteryCharger::BatteryCharger(const TLA2024 &battery_, const Sensor &sensor_, u
 void BatteryCharger::start(const char* i2cPath) {
     while (true)
     {
-        bool isBatteryConnected = battery.connectToSlave(i2cPath);
+        bool isBatteryConnected = battery.isBatteryConnected();
 
         if(!isBatteryConnected) {
             std::this_thread::sleep_for(std::chrono::seconds(a));
-            isBatteryConnected = battery.connectToSlave(i2cPath);
+            isBatteryConnected = battery.isBatteryConnected();
         }
         else {
             if (batteryIsPowerSource()) {
@@ -37,15 +40,17 @@ void BatteryCharger::start(const char* i2cPath) {
             }
             else {
                 while (batteryNeedsCharge()) {
+                    temperature = battery.getTemperature();
+
                     if (isTemperatureInRange(MIN_TEMPERATURE, MAX_TEMPERATURE)) {
                         allowCharging();
 
                         while (voltage < h) {
                             std::this_thread::sleep_for(std::chrono::hours(j));
                             
-                            if (battery.connectToSlave(i2cPath))
+                            if (battery.isBatteryConnected())
                             {
-                                measureCurrentVoltageAndTemperature();
+                                voltage = battery.getVoltage();
                             }
                             else {
                                 prohibitCharging();
@@ -60,8 +65,9 @@ void BatteryCharger::start(const char* i2cPath) {
                             startWarming();
                             std::this_thread::sleep_for(std::chrono::hours(b));
                             
-                            if (battery.connectToSlave(i2cPath)) {
-                                measureCurrentVoltageAndTemperature();
+                            if (battery.isBatteryConnected()) {
+                                voltage = battery.getVoltage();
+                                temperature = battery.getTemperature();
                             }
                             else {
                                 endWarming();
@@ -81,7 +87,7 @@ void BatteryCharger::start(const char* i2cPath) {
                         }
                     }
                 }
-                if (battery.connectToSlave(i2cPath) && !batteryNeedsCharge()) {
+                if (battery.isBatteryConnected() && !batteryNeedsCharge()) {
                     std::this_thread::sleep_for(std::chrono::hours(e));
                 }
             }
@@ -108,7 +114,7 @@ bool BatteryCharger::batteryIsPowerSource() {
 }
 
 bool BatteryCharger::batteryNeedsCharge() {
-    measureCurrentVoltageAndTemperature();
+    voltage = battery.getVoltage();
     return voltage < d;
 }
 
@@ -121,14 +127,6 @@ bool BatteryCharger::isTemperatureLower(int threshhold) {
 bool BatteryCharger::isTemperatureHigher(int threshold) {
     return temperature > threshold;
 }
-
-void BatteryCharger::measureCurrentVoltageAndTemperature() {
-    uint16_t voltageInBits = battery.readAdc(channel);
-    voltage = battery.calculateVoltage(voltageInBits);
-    sensor.setVoltage(voltage);
-    temperature = sensor.getTemperature();
-}
-
 
 void BatteryCharger::setA(int a_) {
     a = a_;

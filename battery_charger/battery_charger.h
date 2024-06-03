@@ -1,5 +1,4 @@
-#include "../sensor/sensor.h"
-#include "../tla2024_adc1015/TLA2024.h"
+#include "../battery/battery.h"
 #include <iomanip>
 #include <chrono>
 #include <thread>
@@ -21,13 +20,13 @@ class BatteryCharger {
         float temperature;
         float voltage;
 
-        TLA2024 battery;
-        Sensor sensor;
+        Battery battery;
 
         uint16_t channel;
     public:
-        BatteryCharger(const TLA2024 &battery, const Sensor &sensor);
-        BatteryCharger(const TLA2024 &battery, const Sensor &sensor, uint16_t channel = TLA2024::MUX_0_GND, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
+        BatteryCharger();
+        BatteryCharger(const Battery &battery);
+        BatteryCharger(const Battery &battery, uint16_t channel = TLA2024::MUX_0_GND, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
 
         void start(const char* i2c_path);
 
@@ -73,8 +72,6 @@ class BatteryCharger {
         bool isTemperatureInRange(int start, int end);
         bool isTemperatureLower(int threshhold);
         bool isTemperatureHigher(int threshold);
-
-        void measureCurrentVoltageAndTemperature();
 
         enum TemperatureRestrictions {
             MIN_TEMPERATURE = 0,
