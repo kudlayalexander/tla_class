@@ -26,7 +26,7 @@ class BatteryCharger {
     public:
         BatteryCharger();
         BatteryCharger(const Battery &battery);
-        BatteryCharger(const Battery &battery, uint16_t channel = TLA2024::MUX_0_GND, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
+        BatteryCharger(const Battery &battery, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
 
         void start(const char* i2c_path);
 

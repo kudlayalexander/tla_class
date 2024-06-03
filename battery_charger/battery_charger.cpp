@@ -2,16 +2,13 @@
 
 BatteryCharger::BatteryCharger() {
     battery = Battery();
-    channel = TLA2024::MUX_0_GND;
 }
 BatteryCharger::BatteryCharger(const Battery &battery_) {
     battery = battery_;
-    channel = TLA2024::MUX_0_GND;
 }
 
-BatteryCharger::BatteryCharger(const Battery &battery_, uint16_t channel_ = TLA2024::MUX_0_GND, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
+BatteryCharger::BatteryCharger(const Battery &battery_, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
     battery = battery_;
-    channel = channel_;
     a = a_;
     b = b_;
     c = c_;
@@ -113,7 +110,7 @@ bool BatteryCharger::batteryIsPowerSource() {
     return true;
 }
 
-bool BatteryCharger::batteryNeedsCharge() {
+bool BatteryCharger::   batteryNeedsCharge() {
     voltage = battery.getVoltage();
     return voltage < d;
 }

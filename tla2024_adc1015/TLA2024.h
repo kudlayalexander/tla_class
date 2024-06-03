@@ -40,7 +40,8 @@ class TLA2024 {
         bool connectToSlave(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
         void disconnect();
 
-        int16_t readAdc(uint16_t mux);
+        int16_t readRaw(uint16_t mux);
+        float readVoltage(uint16_t mux);
 
         int16_t getLastConversion();
  
@@ -62,10 +63,10 @@ class TLA2024 {
         void setConversionTime(uint16_t dr_);
         uint16_t getConversionTime();
 
-        // 12-bit long input with value of voltage in binary
-        float calculateVoltage(uint16_t voltageBits);
 
     private:
+        float calculateVoltage(uint16_t voltageBits);
+
         enum RegisterPointer {
             REGISTER_POINTER_MASK = 0x03,
             REGISTER_POINTER_CONVERSION = 0x00,

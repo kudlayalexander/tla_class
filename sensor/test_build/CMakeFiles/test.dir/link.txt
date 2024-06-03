@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test.dir/test_sensor.cpp.o  -o test  libtemperature_sensor.a 

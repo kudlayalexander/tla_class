@@ -11,7 +11,7 @@ void test(uint16_t channel) {
 
     std::unique_ptr<Sensor> sensor {std::make_unique<Sensor>()};
     
-    uint16_t voltageInBits = tla->readAdc(channel);
+    uint16_t voltageInBits = tla->readRaw(channel);
     channel >>=12;
     float voltage = tla->calculateVoltage(voltageInBits);
     sensor->setVoltage(voltage);

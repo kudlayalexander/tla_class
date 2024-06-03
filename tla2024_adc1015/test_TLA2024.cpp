@@ -14,10 +14,10 @@ int main() {
     tla->setDataRate(tla->DR_1600_SPS);
 
     do {
-        adc0 = tla->readAdc(tla->MUX_0_GND);
-        adc1 = tla->readAdc(tla->MUX_1_GND);
-        adc2 = tla->readAdc(tla->MUX_2_GND);
-        adc3 = tla->readAdc(tla->MUX_3_GND);
+        adc0 = tla->readRaw(tla->MUX_0_GND);
+        adc1 = tla->readRaw(tla->MUX_1_GND);
+        adc2 = tla->readRaw(tla->MUX_2_GND);
+        adc3 = tla->readRaw(tla->MUX_3_GND);
 
         std::cout << std::hex << "adc0: " << adc0 << std::dec << std::endl;
         std::cout << std::hex << "adc1: " << adc1 << std::dec <<  std::endl;
@@ -34,10 +34,10 @@ int main() {
         std::cout << "-----------------------------" << std::endl;
         std::cout << "-----------------------------" << std::endl;
 
-        adc0_1 = tla->readAdc(tla->MUX_0_1);
-        adc0_3 = tla->readAdc(tla->MUX_0_3);
-        adc1_3 = tla->readAdc(tla->MUX_1_3);
-        adc2_3 = tla->readAdc(tla->MUX_2_3);
+        adc0_1 = tla->readRaw(tla->MUX_0_1);
+        adc0_3 = tla->readRaw(tla->MUX_0_3);
+        adc1_3 = tla->readRaw(tla->MUX_1_3);
+        adc2_3 = tla->readRaw(tla->MUX_2_3);
 
         std::cout << std::hex << "adc0_1: " << adc0_1 << std::endl;
         std::cout << std::hex << "adc0_3: " << adc0_3 << std::endl;

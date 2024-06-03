@@ -66,7 +66,7 @@ void TLA2024::setConfiguration(bool continuous) {
     writeRegister(REGISTER_POINTER_HITHRESH, 0x8000);
 }
 
-int16_t TLA2024::readAdc(uint16_t mux_) {
+int16_t TLA2024::readRaw(uint16_t mux_) {
     setMultiplexerConfig(mux_);
     setConfiguration(false);
 
@@ -85,6 +85,11 @@ int16_t TLA2024::readAdc(uint16_t mux_) {
         result |= 0xF000;
     }
     return (int16_t)result;
+}
+
+float TLA2024::readVoltage(uint16_t mux) {
+    uint16_t rawVoltage = readRaw(mux);
+    return calculateVoltage(rawVoltage);
 }
 
 
