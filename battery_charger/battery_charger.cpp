@@ -59,8 +59,14 @@ void BatteryCharger::start(const char* i2cPath) {
                         if (isTemperatureLower(MIN_TEMPERATURE)) {
                             startWarming();
                             std::this_thread::sleep_for(std::chrono::hours(b));
-                            if (battery.connectToSlave(i2cPath))
+                            
+                            if (battery.connectToSlave(i2cPath)) {
                                 measureCurrentVoltageAndTemperature();
+                            }
+                            else {
+                                endWarming();
+                                break;
+                            }
 
                             if (isTemperatureLower(MIN_TEMPERATURE)) {
                                 std::this_thread::sleep_for(std::chrono::hours(c));
@@ -74,8 +80,8 @@ void BatteryCharger::start(const char* i2cPath) {
                             std::this_thread::sleep_for(std::chrono::hours(j));
                         }
                     }
-                }   
-                if (!batteryNeedsCharge()) {
+                }
+                if (battery.connectToSlave(i2cPath) && !batteryNeedsCharge()) {
                     std::this_thread::sleep_for(std::chrono::hours(e));
                 }
             }
