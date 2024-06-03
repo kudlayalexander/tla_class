@@ -1,12 +1,14 @@
 #include "battery_charger.h"
-BatteryCharger::BatteryCharger() {
-    battery = std::make_unique<TLA2024>();
-    sensor = std::make_unique<Sensor>();
+BatteryCharger::BatteryCharger(const TLA2024 &battery_, const Sensor &sensor_) {
+    battery = battery_;
+    sensor = sensor_;
+    channel = TLA2024::MUX_0_GND;
 }
 
-BatteryCharger::BatteryCharger(bool autoChargerEnabled = false, uint16_t channel = TLA2024::MUX_0_GND, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
-    battery = std::make_unique<TLA2024>();
-    sensor = std::make_unique<Sensor>();
+BatteryCharger::BatteryCharger(const TLA2024 &battery_, const Sensor &sensor_,uint16_t channel_ = TLA2024::MUX_0_GND, int a_, int b_, int c_, int d_, int e_, int f_, int g_, int h_, int i_, int j_) {
+    battery = battery_;
+    sensor = sensor_;
+    channel = channel_;
     a = a_;
     b = b_;
     c = c_;
@@ -19,11 +21,12 @@ BatteryCharger::BatteryCharger(bool autoChargerEnabled = false, uint16_t channel
     j = j_;
 }
 
-void BatteryCharger::begin(const char* i2cPath) {
-    bool isConnectedToBattery = battery->connectToSlave(i2cPath); 
+void BatteryCharger::start(const char* i2cPath) {
+    bool isConnectedToBattery = battery.connectToSlave(i2cPath);
+
     while(!isConnectedToBattery) {
         std::this_thread::sleep_for(std::chrono::seconds(a));
-        isConnectedToBattery = battery->connectToSlave(i2cPath);
+        isConnectedToBattery = battery.connectToSlave(i2cPath);
     }
 
     while(batteryIsPowerSource()) {
@@ -53,7 +56,7 @@ void BatteryCharger::begin(const char* i2cPath) {
                     }
                     endWarming();
                 }
-                else {
+                else if (isTemperatureHigher(MAX_TEMPERATURE)) {
                     std::this_thread::sleep_for(std::chrono::hours(j));
                 }
             }
@@ -98,10 +101,10 @@ bool BatteryCharger::isTemperatureHigher(int threshold) {
 }
 
 void BatteryCharger::measureCurrentVoltageAndTemperature() {
-    uint16_t voltageInBits = battery->readAdc(channel);
-    voltage = battery->calculateVoltage(voltageInBits);
-    sensor->setVoltage(voltage);
-    temperature = sensor->getTemperature();
+    uint16_t voltageInBits = battery.readAdc(channel);
+    voltage = battery.calculateVoltage(voltageInBits);
+    sensor.setVoltage(voltage);
+    temperature = sensor.getTemperature();
 }
 
 

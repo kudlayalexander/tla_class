@@ -21,15 +21,15 @@ class BatteryCharger {
         float temperature;
         float voltage;
 
-        std::unique_ptr<TLA2024> battery;
-        std::unique_ptr<Sensor> sensor;
+        TLA2024 battery;
+        Sensor sensor;
 
         uint16_t channel;
     public:
-        BatteryCharger();
-        BatteryCharger(bool autoChargerEnabled = false, uint16_t channel = TLA2024::MUX_0_GND, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
+        BatteryCharger(const TLA2024 &battery, const Sensor &sensor);
+        BatteryCharger(const TLA2024 &battery, const Sensor &sensor, uint16_t channel = TLA2024::MUX_0_GND, int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
 
-        void begin(const char* i2c_path);
+        void start(const char* i2c_path);
 
         void setA(int a_);
         int getA();
