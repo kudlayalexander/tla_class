@@ -10,6 +10,10 @@ class Battery {
         Battery();
         Battery(const TLA2024 &adc, const char* i2cPath = I2C_DEFAULT_PATH);
 
+        constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
+            return (r1 + r2) / r2;
+        }
+
         float getTemperature();
         float getVoltage();
         bool isBatteryConnected();

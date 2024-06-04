@@ -18,7 +18,7 @@ float Battery::getTemperature() {
 
 float Battery::getVoltage() {
     float voltage = adc.readVoltage(TLA2024::MUX_0_GND);
-    static constexpr auto batteryVoltageScaleFactor = calculateVoltageDivisionScaleFactor(430, 110);
+    auto batteryVoltageScaleFactor = calculateVoltageDivisionScaleFactor(430,110);
     return voltage * batteryVoltageScaleFactor;
 }
 
@@ -44,8 +44,8 @@ void Battery::setI2CPath(const char* i2cPath_) {
 }
 
 float Battery::calculateTemperature(float voltage) {
-    if (voltage < 0.98) return MAX_TEMPERATURE;
-    if (voltage > 2.82) return MIN_TEMPERATURE;
+    if (voltage < 0.98f) return MAX_TEMPERATURE;
+    if (voltage > 2.82f) return MIN_TEMPERATURE;
 
     int coeffs_len = 8;
 
@@ -63,8 +63,8 @@ float Battery::calculateTemperature(float voltage) {
 };
 
 float Battery::calculateResistance(float voltage) {
-    if (voltage < 0.98) return MIN_RESISTANCE;
-    if (voltage > 2.82) return MAX_RESISTANCE;
+    if (voltage < 0.98f) return MIN_RESISTANCE;
+    if (voltage > 2.82f) return MAX_RESISTANCE;
 
     int coeffs_len = 17;
     
@@ -98,16 +98,13 @@ float Battery::calculateResistance(float voltage) {
 float Battery::calculateValueByWeights(long double *coeffs, int coeffs_len, float value) {
     long double result = 0;
     long double degree = 1;
+    long double valueDouble = static_cast<long double>(value);
 
     for (int i = 0; i < coeffs_len; i++)
     {
         result += degree * coeffs[i];
-        degree*=value;
+        degree*=valueDouble;
     }
     return static_cast<float>(result);
 };
-
-constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
-    return (r1 + r2) / r2;
-}
 
