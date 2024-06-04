@@ -18,7 +18,8 @@ float Battery::getTemperature() {
 
 float Battery::getVoltage() {
     float voltage = adc.readVoltage(TLA2024::MUX_0_GND);
-    return voltage;
+    static constexpr auto batteryVoltageScaleFactor = calculateVoltageDivisionScaleFactor(430, 110);
+    return voltage * batteryVoltageScaleFactor;
 }
 
 void Battery::connectBattery() {
@@ -105,4 +106,8 @@ float Battery::calculateValueByWeights(long double *coeffs, int coeffs_len, floa
     }
     return static_cast<float>(result);
 };
+
+constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
+    return (r1 + r2) / r2;
+}
 

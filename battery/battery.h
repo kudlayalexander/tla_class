@@ -23,7 +23,7 @@ class Battery {
         float calculateTemperature(float voltage);
         float calculateResistance(float voltage);
         float calculateValueByWeights(long double *coeffs, int coeffs_len, float value);
-        
+
         enum Temperature {
             MAX_TEMPERATURE = 85,
             MIN_TEMPERATURE = -40
