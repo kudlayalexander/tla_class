@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test.dir/test_TLA2024.cpp.o  -o test  libtla2024.a 
