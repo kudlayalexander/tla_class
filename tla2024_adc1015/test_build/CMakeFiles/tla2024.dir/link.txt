@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtla2024.a  CMakeFiles/tla2024.dir/TLA2024.cpp.o
-/usr/bin/ranlib libtla2024.a

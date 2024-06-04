@@ -1,4 +1,0 @@
-/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/test_build/CMakeFiles/rebuild_cache.dir
-/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/test_build/CMakeFiles/edit_cache.dir
-/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/test_build/CMakeFiles/test.dir
-/home/couldlie/vscode_projs/tla_class/tla2024_adc1015/test_build/CMakeFiles/tla2024.dir
