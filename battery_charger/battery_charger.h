@@ -62,9 +62,10 @@ class BatteryCharger {
 
         void setJ(int j_);
         int getJ();
-    private:
+
         void startWarming();
         void endWarming();
+    private:
 
         void allowCharging();
         void prohibitCharging();

@@ -34,6 +34,7 @@ void BatteryCharger::start(const char* i2cPath) {
         else {
             enableBattery();
             endWarming();
+
             if (batteryIsPowerSource()) {
                 std::this_thread::sleep_for(std::chrono::hours(g));
                 continue;
@@ -53,7 +54,6 @@ void BatteryCharger::start(const char* i2cPath) {
                                 voltage = battery.getVoltage();
                             }
                             else {
-                                prohibitCharging();
                                 break;
                             }
                         }
@@ -70,7 +70,6 @@ void BatteryCharger::start(const char* i2cPath) {
                                 temperature = battery.getTemperature();
                             }
                             else {
-                                endWarming();
                                 break;
                             }
 
@@ -97,42 +96,42 @@ void BatteryCharger::start(const char* i2cPath) {
 
 void BatteryCharger::startWarming() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 17)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
 }
 
 void BatteryCharger::endWarming() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 17)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
 }
 
 void BatteryCharger::enableBattery() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 18)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
 }
 
 void BatteryCharger::disableBattery() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 18)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
 } 
 
 void BatteryCharger::allowCharging() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 27)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
 }
 
 void BatteryCharger::prohibitCharging() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 27)};
-    gpio->setPinMode(law::gpio::PinMode::INPUT);
+    gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
 }
 
 bool BatteryCharger::batteryIsPowerSource() {
-    return true;
+    return false;
 }
 
 bool BatteryCharger::batteryNeedsCharge() {
@@ -140,13 +139,14 @@ bool BatteryCharger::batteryNeedsCharge() {
     return voltage < d;
 }
 
+// ----FIX-----
 // uint8_t BatteryCharger::getChargingStatus() {
 //     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 7)};
-//     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
+//     gpio->setPinMode(law::gpio::PinMode::INPUT);
 //     uint8_t status_first = static_cast<std::underlying_type_t<BoolRet>>(gpio->get());
 
 //     gpio->setPin(law::gpio::Port::GPIO3, 4);
-//     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
+//     gpio->setPinMode(law::gpio::PinMode::INPUT);
 //     uint8_t status_second = static_cast<std::underlying_type_t<BoolRet>>(gpio->get());
 
 //     return status_first << 1 | status_second;
