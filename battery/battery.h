@@ -1,4 +1,6 @@
-#include "../tla2024_adc1015/TLA2024.h"
+#pragma once
+
+#include "../tla2024/TLA2024.h"
 
 class Battery {
     private:

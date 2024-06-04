@@ -3,7 +3,6 @@
 Battery::Battery() {
     adc = TLA2024();
     adc.setFullScaleRange(TLA2024::FSR_4_096V);
-    adc.setMultiplexerConfig(TLA2024::MUX_0_GND);
     i2cPath = I2C_DEFAULT_PATH;
 }
 
