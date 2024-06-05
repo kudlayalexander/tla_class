@@ -1,17 +1,15 @@
 #include "TLA2024.h"
 #include <iostream>
 
-int i2cFd;
-
 
 TLA2024::TLA2024() {
-    int fd;
+    i2cFd = 0;
     dr = DR_1600_SPS;
     fsr = FSR_2_048V;
     mux = MUX_0_1;
     mode = MOD_SINGLE;
     os = OS_SINGLE_CONVERSION;
-    setConversionTime(dr);
+    setConversionTime();
 }
 
 bool TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddress) {
@@ -87,8 +85,8 @@ int16_t TLA2024::readRaw(uint16_t mux_) {
     return (int16_t)result;
 }
 
-float TLA2024::readVoltage(uint16_t mux) {
-    uint16_t rawVoltage = readRaw(mux);
+float TLA2024::readVoltage(uint16_t mux_) {
+    uint16_t rawVoltage = readRaw(mux_);
     return calculateVoltage(rawVoltage);
 }
 
@@ -122,7 +120,7 @@ uint16_t TLA2024::getConversionTime() {
     return conversionTime;
 }
  
-void TLA2024::setConversionTime(uint16_t dr) {
+void TLA2024::setConversionTime() {
     switch (dr) {
         case (DR_128_SPS):
             conversionTime = 1000000 / 128 + 5;
@@ -163,6 +161,7 @@ uint16_t TLA2024::getFullScaleRange() {
  
 void TLA2024::setDataRate(uint16_t dr_) {
     dr = dr_;
+    setConversionTime();
 }
  
 uint16_t TLA2024::getDataRate() {

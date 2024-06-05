@@ -62,11 +62,12 @@ class TLA2024 {
         void setMode(uint16_t mode_);
         uint16_t getMode();
  
-        void setConversionTime(uint16_t dr_);
         uint16_t getConversionTime();
 
 
     private:
+        void setConversionTime();
+        
         float calculateVoltage(uint16_t voltageBits);
 
         enum RegisterPointer {

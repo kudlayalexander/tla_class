@@ -139,17 +139,18 @@ bool BatteryCharger::batteryNeedsCharge() {
     return voltage < d;
 }
 
-// ----FIX-----
-// uint8_t BatteryCharger::getChargingStatus() {
-//     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 7)};
-//     gpio->setPinMode(law::gpio::PinMode::INPUT);
-//     uint8_t status_first = static_cast<std::underlying_type_t<BoolRet>>(gpio->get());
+// law::BoolRet BatteryCharger::getChargingStatusFirst() {
+//     return getChargingStatus(law::gpio::Port::GPIO3, 7);
+// }
 
-//     gpio->setPin(law::gpio::Port::GPIO3, 4);
-//     gpio->setPinMode(law::gpio::PinMode::INPUT);
-//     uint8_t status_second = static_cast<std::underlying_type_t<BoolRet>>(gpio->get());
+// law::BoolRet BatteryCharger::getChargingStatusSecond() {
+//     return getChargingStatus(law::gpio::Port::GPIO3, 4);
+// }
 
-//     return status_first << 1 | status_second;
+// law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber) {
+//     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(port, pinNumber)};
+//     gpio->setPinMode(law::gpio::PinMode::INPUT);
+//     return gpio->get();
 // }
 
 bool BatteryCharger::isTemperatureInRange(int start, int end) {

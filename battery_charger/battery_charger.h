@@ -24,8 +24,6 @@ class BatteryCharger {
         float voltage;
 
         Battery battery;
-
-        uint16_t channel;
     public:
         BatteryCharger();
         BatteryCharger(const Battery &battery);
@@ -80,7 +78,11 @@ class BatteryCharger {
         void enableBattery();
         void disableBattery(); 
 
-        uint8_t getChargingStatus();
+        // law::BoolRet BatteryCharger::getChargingStatusFirst();
+
+        // law::BoolRet BatteryCharger::getChargingStatusSecond();
+
+        // law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber);
 
         enum TemperatureRestrictions {
             MIN_TEMPERATURE = 0,
