@@ -1,3 +1,0 @@
-/home/couldlie/vscode_projs/tla2024/build/_deps/utils-subbuild/CMakeFiles/utils-populate.dir
-/home/couldlie/vscode_projs/tla2024/build/_deps/utils-subbuild/CMakeFiles/edit_cache.dir
-/home/couldlie/vscode_projs/tla2024/build/_deps/utils-subbuild/CMakeFiles/rebuild_cache.dir

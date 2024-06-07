@@ -1,2 +1,0 @@
-/usr/bin/ar qc liberrcode.a CMakeFiles/errcode.dir/src/ErrorCode.cpp.o
-/usr/bin/ranlib liberrcode.a

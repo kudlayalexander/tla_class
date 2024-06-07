@@ -1,2 +1,0 @@
-/usr/bin/ar qc libutils.a CMakeFiles/utils.dir/src/CRC32.cpp.o CMakeFiles/utils.dir/src/Time.cpp.o
-/usr/bin/ranlib libutils.a
