@@ -1,0 +1,34 @@
+{
+    "api": {
+        "tpapi": {
+            "ep": {
+                "type": "uds_udp_server",
+                "uds_udp_server": {
+                    "path": "/var/run/bch.ctl.sock"
+                }
+            }
+        }
+    },
+    "core": {
+        "battery": {
+            "connect_await_timeout_sec": 60,
+            "act_pwr_source_check_timeout_h": 1
+        },
+        "heat": {
+            "heat_duration_h": 2,
+            "temp_range_retry_timeout_h": 12,
+            "temp_range_celsius": {
+                "min": 0,
+                "max": 60
+            }
+        },
+        "charge": {
+            "start_charge_at_volts": 11.4,
+            "target_battery_voltage": 12.6,
+            "charge_status_update_period_h": 1
+        }
+    },
+    "logger": {
+        "level": "INFO"
+    }
+}
