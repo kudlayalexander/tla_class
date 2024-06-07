@@ -1,0 +1,3 @@
+/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/confparse-populate.dir
+/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/edit_cache.dir
+/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,14 @@
+# Target labels
+ logger-populate
+# Source files and their labels
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/CMakeFiles/logger-populate
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/CMakeFiles/logger-populate.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/CMakeFiles/logger-populate-complete.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-build.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-configure.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-download.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-install.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-mkdir.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-patch.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-test.rule
+/home/couldlie/vscode_projs/tla2024/build/_deps/logger-subbuild/logger-populate-prefix/src/logger-populate-stamp/logger-populate-update.rule

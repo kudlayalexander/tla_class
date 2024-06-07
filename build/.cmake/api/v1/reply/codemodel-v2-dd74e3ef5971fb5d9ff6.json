@@ -1,0 +1,348 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						6
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "_deps/law-build",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5
+					],
+					"jsonFile" : "directory-_deps.law-build-Debug-6dca6c70c471d2fa2597.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "build/_deps/law-src",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "_deps/etl-build",
+					"jsonFile" : "directory-_deps.etl-build-Debug-52395e29a58a6629fd8c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "build/_deps/etl-src"
+				},
+				{
+					"build" : "_deps/ctre-build",
+					"jsonFile" : "directory-_deps.ctre-build-Debug-d5c3f2a6a047df3969b8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 3,
+					"source" : "build/_deps/ctre-src"
+				},
+				{
+					"build" : "_deps/utils-build",
+					"jsonFile" : "directory-_deps.utils-build-Debug-5f941ab213a1e7b367a6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 4,
+					"source" : "build/_deps/utils-src",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "_deps/errcode-build",
+					"jsonFile" : "directory-_deps.errcode-build-Debug-1c8c4c85f92b23aeb52f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 5,
+					"source" : "build/_deps/errcode-src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "_deps/confparse-build",
+					"childIndexes" : 
+					[
+						7,
+						8
+					],
+					"jsonFile" : "directory-_deps.confparse-build-Debug-d3e1bee38e58b68fd4c3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 6,
+					"source" : "build/_deps/confparse-src",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "_deps/rapidjson-build",
+					"jsonFile" : "directory-_deps.rapidjson-build-Debug-5a55f6cdc64b9c7d1981.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 7,
+					"source" : "build/_deps/rapidjson-src"
+				},
+				{
+					"build" : "_deps/logger-build",
+					"childIndexes" : 
+					[
+						9
+					],
+					"jsonFile" : "directory-_deps.logger-build-Debug-90839293078fd4acc1ea.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 8,
+					"source" : "build/_deps/logger-src",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "_deps/fmt-build",
+					"jsonFile" : "directory-_deps.fmt-build-Debug-531a1205a7fb4547a17b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 9,
+					"source" : "build/_deps/fmt-src"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						6
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "battery_charger",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5
+					],
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "law",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "etl",
+					"parentIndex" : 1
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "ctre",
+					"parentIndex" : 1
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "utils",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "errcode",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						7,
+						8
+					],
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "confparse",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "rapidjson",
+					"parentIndex" : 6
+				},
+				{
+					"childIndexes" : 
+					[
+						9
+					],
+					"directoryIndexes" : 
+					[
+						8
+					],
+					"name" : "logger",
+					"parentIndex" : 6,
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "fmt",
+					"parentIndex" : 8
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "battery_charger::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-battery_charger-Debug-cdbded2a46665e4d2c60.json",
+					"name" : "battery_charger",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "confparse::@9a28c31de00626982641",
+					"jsonFile" : "target-confparse-Debug-b04fb5ec0e90df8a674c.json",
+					"name" : "confparse",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "errcode::@04e0b0ccf6c3344b6565",
+					"jsonFile" : "target-errcode-Debug-22967b8a3a06e3daa259.json",
+					"name" : "errcode",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "law::@a4b98ba9cae6e6645175",
+					"jsonFile" : "target-law-Debug-063461424718129118ff.json",
+					"name" : "law",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "logger::@e09705b4e69bff1f8cc2",
+					"jsonFile" : "target-logger-Debug-1f964cf526cb91bfbe00.json",
+					"name" : "logger",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "utils::@6ca65a814e49b351a0c8",
+					"jsonFile" : "target-utils-Debug-95fad1818dd40bde7dd1.json",
+					"name" : "utils",
+					"projectIndex" : 4
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/couldlie/vscode_projs/tla2024/build",
+		"source" : "/home/couldlie/vscode_projs/tla2024"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

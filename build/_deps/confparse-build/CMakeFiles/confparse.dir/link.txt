@@ -1,0 +1,2 @@
+/usr/bin/ar qc libconfparse.a CMakeFiles/confparse.dir/src/RapidjsonConfiguration.cpp.o CMakeFiles/confparse.dir/src/RetCode.cpp.o
+/usr/bin/ranlib libconfparse.a

@@ -68,3 +68,4 @@ add_executable(${PROJECT_NAME} ${includes} ${sources})
 
 find_package(TedixLibrary)
 FindTedixLibrary(law testing 1.3.1-3-ga6630c7)
+FindTedixLibrary(confparse stable 0.1.0-9-gaff32b4)

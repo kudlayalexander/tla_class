@@ -1,0 +1,1405 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "_deps/law-build/liblaw.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries",
+			"FindTedixLibrary",
+			"add_compile_options",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"build/_deps/law-src/CMakeLists.txt",
+			"/usr/share/cmake-3.29/Modules/FindTedixLibrary.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 66,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 73,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 48,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 48,
+				"parent" : 4
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 7,
+				"parent" : 6
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 47,
+				"parent" : 6
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 32,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 33,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 70,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 11
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 71,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 13
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 4
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 2
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -std=c++20 -Weffc++ -fstack-protector-all -fno-rtti -ffast-math -O0 -g3 -ggdb -march=armv7l -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wvla -Wshadow -Wno-unused-local-typedefs -Wno-gnu-zero-variadic-macro-arguments -Wmissing-format-attribute -Wuninitialized -Wdouble-promotion -Wno-gnu-statement-expression -Wno-gnu-string-literal-operator-template -Wno-gnu-anonymous-struct -Wno-nested-anon-types -g -std=gnu++2a"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wvla"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Weffc++"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wshadow"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wpedantic"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wcast-qual"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wcast-align"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wuninitialized"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wdouble-promotion"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wmissing-format-attribute"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wno-nested-anon-types"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wno-gnu-anonymous-struct"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wno-unused-local-typedefs"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wno-gnu-statement-expression"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-Wno-gnu-zero-variadic-macro-arguments"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-fno-rtti"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-ffast-math"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-fstack-protector-all"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-march=armv7l"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-mcpu=cortex-a9"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-mfpu=neon-fp16"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-mfloat-abi=hard"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-O0"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-g3"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "-ggdb"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 9,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-src/."
+				},
+				{
+					"backtrace" : 10,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-src/inc"
+				},
+				{
+					"backtrace" : 12,
+					"isSystem" : true,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/etl-src/inc"
+				},
+				{
+					"backtrace" : 14,
+					"isSystem" : true,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/ctre-src/inc"
+				},
+				{
+					"backtrace" : 15,
+					"isSystem" : true,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/utils-src/inc"
+				},
+				{
+					"backtrace" : 16,
+					"isSystem" : true,
+					"path" : "/home/couldlie/vscode_projs/tla2024/build/_deps/errcode-src/inc"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "20"
+			},
+			"sourceIndexes" : 
+			[
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110,
+				111,
+				112,
+				113,
+				114,
+				115,
+				116,
+				117,
+				118,
+				119,
+				120,
+				121,
+				122,
+				123,
+				124,
+				125,
+				126,
+				127,
+				128,
+				129,
+				130,
+				131,
+				132,
+				133,
+				134,
+				135,
+				136,
+				137,
+				138,
+				139,
+				140,
+				141,
+				142,
+				143,
+				144,
+				145,
+				146,
+				147,
+				148,
+				149,
+				150,
+				151,
+				152,
+				153,
+				154,
+				155,
+				156,
+				157,
+				158
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "errcode::@04e0b0ccf6c3344b6565"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "utils::@6ca65a814e49b351a0c8"
+		}
+	],
+	"id" : "law::@a4b98ba9cae6e6645175",
+	"name" : "law",
+	"nameOnDisk" : "liblaw.a",
+	"paths" : 
+	{
+		"build" : "_deps/law-build",
+		"source" : "build/_deps/law-src"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75,
+				76,
+				77,
+				78,
+				79,
+				80,
+				81,
+				82,
+				83,
+				84,
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110,
+				111,
+				112,
+				113,
+				114,
+				115,
+				116,
+				117,
+				118,
+				119,
+				120,
+				121,
+				122,
+				123,
+				124,
+				125,
+				126,
+				127,
+				128,
+				129,
+				130,
+				131,
+				132,
+				133,
+				134,
+				135,
+				136,
+				137,
+				138,
+				139,
+				140,
+				141,
+				142,
+				143,
+				144,
+				145,
+				146,
+				147,
+				148,
+				149,
+				150,
+				151,
+				152,
+				153,
+				154,
+				155,
+				156,
+				157,
+				158
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventFd/EventFd.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventFd/EventFdTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventFd/OpenOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/Base/PollBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/EventSubscriber/Error.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/EventSubscriber/Event.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/EventSubscriber/IEventSubscriber.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/IPoll.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/EventPolling/Poll/Poll.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/Base/FileBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/File.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/FileTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/OpenOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/Permission.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/File/Utils.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileDescriptor/FileDescriptor.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/Base/InotifyBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/EventSubscriber/DeleteReason.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/EventSubscriber/IEventSubscriber.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/EventSubscriber/PathEvent.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/EventSubscriber/WatchOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/IInotify.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/InitOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FileWatch/Inotify/Inotify.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/FlagValue.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/GPIO/Edge.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/GPIO/PinMode.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/GPIO/Port.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/GPIO/SysfsGPIO.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Pipe/Base/PipeBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Pipe/Pipe.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Pipe/PipeTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/RetCode/RetCode.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Signal/Signal.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Base/SocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Base/SocketDomain.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Base/SocketOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Base/SocketOptionLevel.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Base/SocketType.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/Base/CanBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/Can.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/CanDevice.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/CanTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/ISOTP/ISOTP.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/ISOTP/ISOTPBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/ISOTP/ISOTPDescriptor.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/ISOTP/ISOTPOptions.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/J1939/J1939.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/J1939/J1939Address.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/J1939/J1939Base.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/CAN/J1939/J1939Types.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/Base/NetSocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/InternetAddress/InternetAddress.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/InternetAddress/detail/IpResolver.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/InternetAddress/detail/IpResolverTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Base/TcpSocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Client/TcpClient.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Client/TcpClientBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/AcceptOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/TcpConnection.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/TcpConnectionBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/TcpServer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/TcpServerAcceptor.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/Server/TcpServerBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/TcpOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/TCP/TcpTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/UDP/Base/UdpSocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/UDP/Client/UdpClient.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Net/UDP/Client/UdpClientBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/ReadOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/ReadSendOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/SendOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/Base/UnixSocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/Base/UdsUdpSocketBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/Client/UdsUdpClient.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/Client/UdsUdpClientBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/Server/UdsUdpServer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/Server/UdsUdpServerBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UDP/UdsUdpTypes.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Socket/Unix/UnixAddress/UnixAddress.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/ITimer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/SignalTimer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/TimerFd/ClockId.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/TimerFd/CreateOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/TimerFd/TimerFd.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/TimerFd/TimerOption.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Timer/TimerMode.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Types.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/Base/UartBase.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/RS232/RS232.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/RS485/Base/RS485Base.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/RS485/RS485.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/RS485/RS485Configuration.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/UART/UartConfiguration.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "build/_deps/law-src/inc/law/Utils.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/EventPolling/Poll/EventSubscriber/Error.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/EventPolling/Poll/EventSubscriber/Event.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Eventfd/EventFd.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Eventfd/OpenOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/File/Base/FileBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/File/File.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/File/OpenOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/File/Permission.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/File/Utils.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/FileDescriptor/FileDescriptor.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/FileWatch/Inotify/EventSubscriber/DeleteReason.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/FileWatch/Inotify/EventSubscriber/PathEvent.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/FileWatch/Inotify/EventSubscriber/WatchOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/FileWatch/Inotify/InitOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/GPIO/SysfsGPIO.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Pipe/Pipe.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Pipe/PipeBase/PipeBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/RetCode/RetCode.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Signal/Signal.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Base/SocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/Base/CanBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/Can.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/CanDevice.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/ISOTP/ISOTP.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/ISOTP/ISOTPBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/ISOTP/ISOTPDescriptor.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/ISOTP/ISOTPOptions.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/J1939/J1939.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/J1939/J1939Address.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/CAN/J1939/J1939Base.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/Base/NetSocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/InternetAddress/InternetAddress.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/InternetAddress/detail/IpResolver.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Base/TcpSocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Client/TcpClient.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Client/TcpClientBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Server/AcceptOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Server/TcpConnection.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Server/TcpConnectionBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/TCP/Server/TcpServerBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/UDP/Base/UdpSocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/UDP/Client/UdpClient.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Net/UDP/Client/UdpClientBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/ReadOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/ReadSendOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/SendOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/Base/UnixSocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UDP/Base/UdsUdpSocketBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UDP/Client/UdsUdpClient.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UDP/Client/UdsUdpClientBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UDP/Server/UdsUdpServer.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UDP/Server/UdsUdpServerBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Socket/Unix/UnixAddress/UnixAddress.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Timer/SignalTimer.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Timer/TimerFd/CreateOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Timer/TimerFd/TimerFd.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Timer/TimerFd/TimerOption.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/Base/UartBase.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/RS232/RS232.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/RS485/Base/RS485Base.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/RS485/RS485.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/RS485/RS485Configuration.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/UART/UartConfiguration.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "build/_deps/law-src/src/Utils.cpp",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

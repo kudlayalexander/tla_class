@@ -1,0 +1,3 @@
+/home/couldlie/vscode_projs/tla2024/build/_deps/errcode-subbuild/CMakeFiles/errcode-populate.dir
+/home/couldlie/vscode_projs/tla2024/build/_deps/errcode-subbuild/CMakeFiles/edit_cache.dir
+/home/couldlie/vscode_projs/tla2024/build/_deps/errcode-subbuild/CMakeFiles/rebuild_cache.dir

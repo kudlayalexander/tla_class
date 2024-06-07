@@ -1,0 +1,30 @@
+_deps/law-build/CMakeFiles/law.dir/src/Timer/TimerFd/TimerOption.cpp.o: \
+  /home/couldlie/vscode_projs/tla2024/build/_deps/law-src/src/Timer/TimerFd/TimerOption.cpp \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/sys/timerfd.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/time.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/features.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/stdc-predef.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/sys/cdefs.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/wordsize.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/gnu/stubs.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/gnu/stubs-hard.h \
+  /usr/lib/llvm-11/lib/clang/11.1.0/include/stddef.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/time.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/types.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/typesizes.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/timex.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/xlocale.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/timerfd.h \
+  /home/couldlie/vscode_projs/tla2024/build/_deps/law-src/inc/law/Timer/TimerFd/TimerOption.h \
+  /home/couldlie/vscode_projs/tla2024/build/_deps/law-src/inc/law/FlagValue.h \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/cstdint \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/arm-unknown-linux-gnueabihf/bits/c++config.h \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/arm-unknown-linux-gnueabihf/bits/os_defines.h \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/arm-unknown-linux-gnueabihf/bits/cpu_defines.h \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/pstl/pstl_config.h \
+  /usr/lib/llvm-11/lib/clang/11.1.0/include/stdint.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/stdint.h \
+  /opt/arm_gcc_sysroot/sysroot/usr/include/bits/wchar.h \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/compare \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/concepts \
+  /opt/arm_gcc/lib/gcc/arm-unknown-linux-gnueabihf/11.2.0/../../../../arm-unknown-linux-gnueabihf/include/c++/11.2.0/type_traits

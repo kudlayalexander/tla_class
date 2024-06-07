@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/confparse-populate"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/confparse-populate.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/CMakeFiles/confparse-populate-complete.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-build.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-configure.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-download.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-install.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-patch.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-test.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/confparse-subbuild/confparse-populate-prefix/src/confparse-populate-stamp/confparse-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"confparse-populate"
+		],
+		"name" : "confparse-populate"
+	}
+}

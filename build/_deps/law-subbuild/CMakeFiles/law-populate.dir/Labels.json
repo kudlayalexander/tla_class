@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/CMakeFiles/law-populate"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/CMakeFiles/law-populate.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/CMakeFiles/law-populate-complete.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-build.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-configure.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-download.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-install.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-patch.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-test.rule"
+		},
+		{
+			"file" : "/home/couldlie/vscode_projs/tla2024/build/_deps/law-subbuild/law-populate-prefix/src/law-populate-stamp/law-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"law-populate"
+		],
+		"name" : "law-populate"
+	}
+}
