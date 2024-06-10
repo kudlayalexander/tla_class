@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(battery_charger)
+project(bch)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_C_STANDARD 11)
@@ -42,6 +42,8 @@ add_link_options(
         -Wl,-z,relro,-z,now
 )
 
+add_compile_definitions(FMT_HEADER_ONLY)
+
 message(STATUS "Selected build type: ${CMAKE_BUILD_TYPE}")
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     add_compile_options(-O0 -g3 -ggdb)
@@ -56,19 +58,24 @@ else ()
     message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}")
 endif ()
 
+include_directories(${CMAKE_SOURCE_DIR}/app)
+
 file(GLOB includes CONFIGURE_DEPENDS
-        "*.h"
-        "*/*.h")
+"app/*.h"
+"app/*/*.h"
+"app/*/*/*.h")
 
 file(GLOB sources CONFIGURE_DEPENDS
-        "*.cpp"
-        "*/*.cpp")
+"app/*.cpp"
+"app/*/*.cpp"
+"app/*/*/*.cpp")
 
 add_executable(${PROJECT_NAME} ${includes} ${sources})
 
 find_package(TedixLibrary)
-FindTedixLibrary(law testing 1.3.1-3-ga6630c7)
-FindTedixLibrary(confparse stable 0.1.0-9-gaff32b4)
+FindTedixLibrary(tpapi testing 1.2.14-9-g469ba0c)
+FindTedixLibrary(magic_enum stable v0.9.5-1-g7f3b4b0)
+FindTedixLibrary(rapidjson stable 1.1.0)
 
 execute_process(COMMAND bash -c "cat ${CMAKE_SOURCE_DIR}/debian/bch/etc/bch/config.json | tr -d '\n' | tr -d ' '" OUTPUT_VARIABLE DEFAULT_CONFIG)
 configure_file(${CMAKE_SOURCE_DIR}/app/config/JsonConfigManager.h.in ${CMAKE_SOURCE_DIR}/app/config/JsonConfigManager.h)

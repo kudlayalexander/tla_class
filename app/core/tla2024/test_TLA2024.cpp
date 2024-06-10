@@ -4,7 +4,7 @@
 
 int test_tla2024() {
 
-    std::unique_ptr<TLA2024> tla {std::make_unique<TLA2024>()};
+    std::unique_ptr<core::tla2024::TLA2024> tla {std::make_unique<core::tla2024::TLA2024>()};
     tla->connectToSlave();
     
     uint16_t adc0, adc1, adc2, adc3, adc0_1, adc0_3, adc1_3, adc2_3;

@@ -1,27 +1,38 @@
 #include "battery_charger.h"
 
-BatteryCharger::BatteryCharger() {
-    battery = Battery();
+
+core::bch::BatteryCharger::BatteryCharger() {
+    battery = core::battery::Battery();
 }
-BatteryCharger::BatteryCharger(const Battery &battery_) {
+core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_) {
     battery = battery_;
 }
 
-BatteryCharger::BatteryCharger(const Battery &battery_, int a_, int b_, int c_, float d_, int e_, int f_, int g_, float h_, int i_, int j_) {
+core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_, std::chrono::seconds connectAwaitTimeoutSec_, std::chrono::hours heatDurationH_, std::chrono::hours tempRangeRetryTimeoutH_, 
+                                float startChargeAtVolts_, std::chrono::hours chargeStatusUpdatePeriodH_,
+                                std::chrono::hours actPwrSourceCheckTimeoutH_, float targetBatteryVoltage_) {
     battery = battery_;
-    a = a_;
-    b = b_;
-    c = c_;
-    d = d_;
-    e = e_;
-    f = f_;
-    g = g_;
-    h = h_;
-    i = i_;
-    j = j_;
+    connectAwaitTimeoutSec = connectAwaitTimeoutSec_;
+    heatDurationH = heatDurationH_;
+    tempRangeRetryTimeoutH = tempRangeRetryTimeoutH_;
+    startChargeAtVolts = startChargeAtVolts_;
+    chargeStatusUpdatePeriodH = chargeStatusUpdatePeriodH_;
+    actPwrSourceCheckTimeoutH = actPwrSourceCheckTimeoutH_;
+    targetBatteryVoltage = targetBatteryVoltage_;
+    chargeStatusUpdatePeriodH = chargeStatusUpdatePeriodH_;
 }
 
-void BatteryCharger::start(const char* i2cPath) {
+void core::bch::BatteryCharger::make(config::Core configCore) {
+    setHeatDurationH(configCore.heat.heatDurationH);
+    setTempRangeRetryTimeoutH(configCore.heat.tempRangeRetryTimeoutH);
+    setStartChargeAtVolts(configCore.charge.startChargeAtVolts);
+    setChargeStatusUpdatePeriodH(configCore.charge.chargeStatusUpdatePeriodH);
+    setActPwrSourceCheckTimeoutH(configCore.battery.actPwrSourceCheckTimeoutHours);
+    setTargetBatteryVoltage(configCore.charge.targetBatteryVoltage);
+    setConnectAwaitTimeoutSec(configCore.battery.connectAwaitTimeoutSec);
+}
+
+void core::bch::BatteryCharger::startAutoCharge(const char* i2cPath) {
     std::cout << "Started program" << std::endl;
 
     while (true)
@@ -30,8 +41,8 @@ void BatteryCharger::start(const char* i2cPath) {
         bool isBatteryConnected = battery.isBatteryConnected();
 
         if(!isBatteryConnected) {
-            std::cout << "Sleep for secs: " << a << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(a));
+            // std::cout << "Sleep for secs: " << connectAwaitTimeoutSec << std::endl;
+            std::this_thread::sleep_for(connectAwaitTimeoutSec);
             isBatteryConnected = battery.isBatteryConnected();
         }
         else {
@@ -40,8 +51,8 @@ void BatteryCharger::start(const char* i2cPath) {
             prohibitCharging();
 
             if (batteryIsPowerSource()) {
-                std::cout << "Sleep for minutes: " << g << std::endl;
-                std::this_thread::sleep_for(std::chrono::minutes(g));
+                // std::cout << "Sleep for hours: " << actPwrSourceCheckTimeoutH << std::endl;
+                std::this_thread::sleep_for(actPwrSourceCheckTimeoutH);
                 continue;
             }
             else {
@@ -51,9 +62,9 @@ void BatteryCharger::start(const char* i2cPath) {
                     if (isTemperatureInRange(MIN_TEMPERATURE, MAX_TEMPERATURE)) {
                         allowCharging();
 
-                        while (voltage < h) {
-                            std::cout << "Sleep for minutes: " << i << std::endl;
-                            std::this_thread::sleep_for(std::chrono::minutes(i));
+                        while (voltage < startChargeAtVolts) {
+                            // std::cout << "Sleep for hours: " << chargeStatusUpdatePeriodH << std::endl;
+                            std::this_thread::sleep_for(chargeStatusUpdatePeriodH);
                             
                             if (battery.isBatteryConnected())
                             {
@@ -72,8 +83,8 @@ void BatteryCharger::start(const char* i2cPath) {
                         if (isTemperatureLower(MIN_TEMPERATURE)) {
                             startWarming();
 
-                            std::cout << "Sleep for minutes: " << b << std::endl;
-                            std::this_thread::sleep_for(std::chrono::minutes(b));
+                            // std::cout << "Sleep for hours: " << heatDurationH << std::endl;
+                            std::this_thread::sleep_for(heatDurationH);
                             
                             if (battery.isBatteryConnected()) {
                                 voltage = battery.getVoltage();
@@ -84,38 +95,35 @@ void BatteryCharger::start(const char* i2cPath) {
                             }
 
                             if (isTemperatureLower(MIN_TEMPERATURE)) {
-                                std::cout << "Sleep for minutes: " << c << std::endl;
-                                std::this_thread::sleep_for(std::chrono::minutes(c));
+                                // std::cout << "Sleep for hours: " << tempRangeRetryTimeoutH << std::endl;
+                                std::this_thread::sleep_for(tempRangeRetryTimeoutH);
                             }
-                            else {
-                                std::cout << "Sleep for minutes: " << f << std::endl;
-                                std::this_thread::sleep_for(std::chrono::minutes(f));
-                            }
+
                             endWarming();
                         }
                         else if (isTemperatureHigher(MAX_TEMPERATURE)) {
-                            std::cout << "Sleep for minutes: " << j << std::endl;
-                            std::this_thread::sleep_for(std::chrono::minutes(j));
+                            // std::cout << "Sleep for hours: " << tempRangeRetryTimeoutH << std::endl;
+                            std::this_thread::sleep_for(tempRangeRetryTimeoutH);
                         }
                     }
                 }
                 if (battery.isBatteryConnected() && !batteryNeedsCharge()) {
-                    std::cout << "Sleep for minutes: " << e << std::endl;
-                    std::this_thread::sleep_for(std::chrono::minutes(e));
+                    // std::cout << "Sleep for hours: " << chargeStatusUpdatePeriodH << std::endl;
+                    std::this_thread::sleep_for(chargeStatusUpdatePeriodH);
                 }
             }
         } 
     }
 }
 
-void BatteryCharger::startWarming() {
+void core::bch::BatteryCharger::startWarming() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 17)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
     std::cout << "Warming started" << std::endl;
 }
 
-void BatteryCharger::endWarming() {
+void core::bch::BatteryCharger::endWarming() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 17)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
@@ -123,7 +131,7 @@ void BatteryCharger::endWarming() {
     std::cout << "Warming ended" << std::endl;
 }
 
-void BatteryCharger::enableBattery() {
+void core::bch::BatteryCharger::enableBattery() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 18)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
@@ -131,7 +139,7 @@ void BatteryCharger::enableBattery() {
     std::cout << "Battery enabled" << std::endl;
 }
 
-void BatteryCharger::disableBattery() {
+void core::bch::BatteryCharger::disableBattery() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO2, 18)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
@@ -139,7 +147,7 @@ void BatteryCharger::disableBattery() {
     std::cout << "Battery disabled" << std::endl;
 } 
 
-void BatteryCharger::allowCharging() {
+void core::bch::BatteryCharger::allowCharging() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 27)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(false);
@@ -147,7 +155,7 @@ void BatteryCharger::allowCharging() {
     std::cout << "Charging allowed" << std::endl;
 }
 
-void BatteryCharger::prohibitCharging() {
+void core::bch::BatteryCharger::prohibitCharging() {
     std::unique_ptr<law::gpio::SysfsGPIO> gpio {std::make_unique<law::gpio::SysfsGPIO>(law::gpio::Port::GPIO3, 27)};
     gpio->setPinMode(law::gpio::PinMode::OUTPUT);
     gpio->setState(true);
@@ -155,21 +163,21 @@ void BatteryCharger::prohibitCharging() {
     std::cout << "Charging prohibited" << std::endl;
 }
 
-bool BatteryCharger::batteryIsPowerSource() {
+bool core::bch::BatteryCharger::batteryIsPowerSource() {
     return false;
     std::cout << "Battery is NOT power source" << std::endl;
 }
 
-bool BatteryCharger::batteryNeedsCharge() {
+bool core::bch::BatteryCharger::batteryNeedsCharge() {
     voltage = battery.getVoltage();
 
     std::cout << "Current voltage: " << voltage << std::endl;
-    std::cout << "Minimum voltage: " << std::fixed << std::setprecision(2) << d << std::endl;
+    std::cout << "Minimum voltage: " << std::fixed << std::setprecision(2) << startChargeAtVolts << std::endl;
 
-    bool result = voltage < d;
+    bool result = voltage < startChargeAtVolts;
     std::cout << "Battery needs charge: " << result << std::endl;
 
-    return voltage < d;
+    return voltage < startChargeAtVolts;
 }
 
 // law::BoolRet BatteryCharger::getChargingStatusFirst() {
@@ -186,91 +194,72 @@ bool BatteryCharger::batteryNeedsCharge() {
 //     return gpio->get();
 // }
 
-bool BatteryCharger::isTemperatureInRange(float start, float end) {
+bool core::bch::BatteryCharger::isTemperatureInRange(float start, float end) {
     bool result = temperature > start && temperature < end;
     std::cout << "Current temperature: " << std::fixed << std::setprecision(2) << temperature << std::endl;
     std::cout << "Is temperature in range 0, 60: " << result << std::endl;
     return temperature > start && temperature < end;
 }
-bool BatteryCharger::isTemperatureLower(float threshold) {
+
+bool core::bch::BatteryCharger::isTemperatureLower(float threshold) {
     bool result = temperature < threshold;
     std::cout << "Current temperature: " << std::fixed << std::setprecision(2) << temperature << std::endl;
     std::cout << "Is temperature lower than 0: " << result << std::endl;
     return temperature < threshold;
 }
-bool BatteryCharger::isTemperatureHigher(float threshold) {
+
+bool core::bch::BatteryCharger::isTemperatureHigher(float threshold) {
     bool result = temperature > threshold;
     std::cout << "Current temperature: " << std::fixed << std::setprecision(2) << temperature << std::endl;
     std::cout << "Is temperature higher than 60: " << result << std::endl;
     return temperature > threshold;
 }
 
-void BatteryCharger::setA(int a_) {
-    a = a_;
+void core::bch::BatteryCharger::setConnectAwaitTimeoutSec(std::chrono::seconds connectAwaitTimeoutSec_) {
+    connectAwaitTimeoutSec = connectAwaitTimeoutSec_;
 }
-int  BatteryCharger::getA() {
-    return a;
-}
-
-void BatteryCharger::setB(int b_) {
-    b = b_;
-}
-int  BatteryCharger::getB() {
-    return b;
+std::chrono::seconds  core::bch::BatteryCharger::getConnectAwaitTimeoutSec() {
+    return connectAwaitTimeoutSec;
 }
 
-void BatteryCharger::setC(int c_) {
-    c = c_;
+void core::bch::BatteryCharger::setHeatDurationH(std::chrono::hours heatDurationH_) {
+    heatDurationH = heatDurationH_;
 }
-int  BatteryCharger::getC() {
-    return c;
-}
-
-void BatteryCharger::setD(float d_) {
-    d = d_;
-}
-float  BatteryCharger::getD() {
-    return d;
+std::chrono::hours  core::bch::BatteryCharger::getHeatDurationH() {
+    return heatDurationH;
 }
 
-void BatteryCharger::setE(int e_) {
-    e = e_;
+void core::bch::BatteryCharger::setTempRangeRetryTimeoutH(std::chrono::hours tempRangeRetryTimeoutH_) {
+    tempRangeRetryTimeoutH = tempRangeRetryTimeoutH_;
 }
-int  BatteryCharger::getE() {
-    return e;
-}
-
-void BatteryCharger::setF(int f_) {
-    f = f_;
-}
-int  BatteryCharger::getF() {
-    return f;
+std::chrono::hours  core::bch::BatteryCharger::getTempRangeRetryTimeoutH() {
+    return tempRangeRetryTimeoutH;
 }
 
-void BatteryCharger::setG(int g_) {
-    g = g_;
+void core::bch::BatteryCharger::setStartChargeAtVolts(float startChargeAtVolts_) {
+    startChargeAtVolts = startChargeAtVolts_;
 }
-int  BatteryCharger::getG() {
-    return g;
-}
-
-void BatteryCharger::setH(float h_) {
-    h = h_;
-}
-float BatteryCharger::getH() {
-    return h;
+float core::bch::BatteryCharger::getStartChargeAtVolts() {
+    return startChargeAtVolts;
 }
 
-void BatteryCharger::setI(int i_) {
-    i = i_;
+void core::bch::BatteryCharger::setChargeStatusUpdatePeriodH(std::chrono::hours chargeStatusUpdatePeriodH_) {
+    chargeStatusUpdatePeriodH = chargeStatusUpdatePeriodH_;
 }
-int  BatteryCharger::getI() {
-    return i;
+std::chrono::hours  core::bch::BatteryCharger::getChargeStatusUpdatePeriodH() {
+    return chargeStatusUpdatePeriodH;
 }
 
-void BatteryCharger::setJ(int j_) {
-    j = j_;
+void core::bch::BatteryCharger::setActPwrSourceCheckTimeoutH(std::chrono::hours actPwrSourceCheckTimeoutH_) {
+    actPwrSourceCheckTimeoutH = actPwrSourceCheckTimeoutH_;
 }
-int  BatteryCharger::getJ() {
-    return j;
+std::chrono::hours  core::bch::BatteryCharger::getActPwrSourceCheckTimeoutH() {
+    return actPwrSourceCheckTimeoutH;
+}
+
+void core::bch::BatteryCharger::setTargetBatteryVoltage(float targetBatteryVoltage_) {
+    targetBatteryVoltage = targetBatteryVoltage_;
+}
+float core::bch::BatteryCharger::getTargetBatteryVoltage() {
+    return targetBatteryVoltage;
 }

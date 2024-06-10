@@ -55,7 +55,7 @@ namespace config {
             ConnectAwaitTimeoutSec connectAwaitTimeoutSec;
             ActPwrSourceCheckTimeoutHours actPwrSourceCheckTimeoutHours;
 
-            auto operator <=> (const Heat &) const noexcept = default;
+            auto operator <=> (const Battery &) const noexcept = default;
         };
 
         struct Heat {         
@@ -79,7 +79,7 @@ namespace config {
                 Min min;
                 Max max;
 
-                auto operator <=>(const Heat &) const noexcept = default;
+                auto operator <=>(const TempRangeCelsius &) const noexcept = default;
             };
 
             HeatDurationH heatDurationH;
@@ -105,6 +105,8 @@ namespace config {
             ChargeStatusUpdatePeriodH chargeStatusUpdatePeriodH;
             StartChargeAtVolts startChargeAtVolts;
             TargetBatteryVoltage targetBatteryVoltage;
+
+            auto operator <=> (const Charge &) const noexcept = default;
         };
 
         Battery battery;

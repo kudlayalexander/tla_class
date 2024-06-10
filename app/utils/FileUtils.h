@@ -2,14 +2,12 @@
 
 #include <string_view>
 
-#include <Logger/Logger.h>
-
-#include "config/IConfigManager.h"
+#include "../config/IConfigManager.h"
 
 namespace utils::file {
     struct DelimPath {
         std::string_view dir;
-        std::string_view filename;
+        std::string_view path;
     };
 
     DelimPath delimFilePathOnDirAndName(std::string_view path) noexcept {
@@ -22,7 +20,7 @@ namespace utils::file {
     }
 
     Status parseConfiguration(config::ConfigManagerObsPtr configManager) noexcept {
-        static constexpr std::string_view moduleName = "ParseConfiguration";
+        static constexpr std::string_view moduleName = "parseConfiguration";
         return boost::leaf::try_handle_some(
                 [configManager]() -> Status {
                     BOOST_LEAF_CHECK(configManager->load());

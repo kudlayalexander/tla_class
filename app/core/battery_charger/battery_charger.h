@@ -1,99 +1,95 @@
 #pragma once
 
-#include "../battery/battery.h"
+#include "core/battery/battery.h"
 #include <iomanip>
 #include <chrono>
 #include <thread>
 #include <iostream>
 #include <law/GPIO/SysfsGPIO.h>
+#include "config/config.h"
 
-class BatteryCharger {
-    private:
-        int a;
-        int b;
-        int c;
-        float d;
-        int e;
-        int f;
-        int g;
-        float h;
-        int i;
-        int j;
+namespace core {
+    namespace bch {
+        class BatteryCharger {
+            private:
+                std::chrono::seconds connectAwaitTimeoutSec;
+                std::chrono::hours heatDurationH;
+                std::chrono::hours tempRangeRetryTimeoutH;
+                float startChargeAtVolts;
+                std::chrono::hours chargeStatusUpdatePeriodH;
+                std::chrono::hours actPwrSourceCheckTimeoutH;
+                float targetBatteryVoltage;
 
-        float temperature;
-        float voltage;
+                float temperature;
+                float voltage;
 
-        Battery battery;
-    public:
-        BatteryCharger();
-        BatteryCharger(const Battery &battery);
-        BatteryCharger(const Battery &battery, int a_, int b_, int c_, float d_, int e_, int f_, int g_, float h_, int i_, int j_);
+                battery::Battery battery;
+            public:
+                BatteryCharger();
+                BatteryCharger(const battery::Battery &battery);
+                BatteryCharger(const battery::Battery &battery, std::chrono::seconds connectAwaitTimeoutSec_, std::chrono::hours heatDurationH_, std::chrono::hours tempRangeRetryTimeoutH_, 
+                                float startChargeAtVolts_, std::chrono::hours chargeStatusUpdatePeriodH_, std::chrono::hours actPwrSourceCheckTimeoutH_, 
+                                float targetBatteryVoltage_);
+                
+                void startAutoCharge(const char* i2c_path = "/dev/i2c-2");
 
-        void start(const char* i2c_path = "/dev/i2c-2");
+                void make(config::Core conf);
 
-        void setA(int a_);
-        int getA();
+                void setConnectAwaitTimeoutSec(std::chrono::seconds connectAwaitTimeoutSec_);
+                std::chrono::seconds getConnectAwaitTimeoutSec();
 
-        void setB(int b_);
-        int getB();
+                void setHeatDurationH(std::chrono::hours heatDurationH_);
+                std::chrono::hours getHeatDurationH();
 
-        void setC(int c_);
-        int getC();
+                void setTempRangeRetryTimeoutH(std::chrono::hours tempRangeRetryTimeoutH_);
+                std::chrono::hours getTempRangeRetryTimeoutH();
 
-        void setD(float d_);
-        float getD();
+                void setStartChargeAtVolts(float startChargeAtVolts_);
+                float getStartChargeAtVolts();
 
-        void setE(int e_);
-        int getE();
+                void setChargeStatusUpdatePeriodH(std::chrono::hours chargeStatusUpdatePeriodH_);
+                std::chrono::hours getChargeStatusUpdatePeriodH();
 
-        void setF(int f_);
-        int getF();
+                void setActPwrSourceCheckTimeoutH(std::chrono::hours actPwrSourceCheckTimeoutH_);
+                std::chrono::hours getActPwrSourceCheckTimeoutH();
 
-        void setG(int g_);
-        int getG();
+                void setTargetBatteryVoltage(float targetBatteryVoltage_);
+                float getTargetBatteryVoltage();
+            private:
+                void startWarming();
+                void endWarming();
 
-        void setH(float h_);
-        float getH();
+                void allowCharging();
+                void prohibitCharging();
 
-        void setI(int i_);
-        int getI();
+                bool batteryIsPowerSource();
+                bool batteryNeedsCharge();
+                
+                bool isTemperatureInRange(float start, float end);
+                bool isTemperatureLower(float threshhold);
+                bool isTemperatureHigher(float threshold);
 
-        void setJ(int j_);
-        int getJ();
+                void enableBattery();
+                void disableBattery(); 
 
-        void startWarming();
-        void endWarming();
+                // law::BoolRet BatteryCharger::getChargingStatusFirst();
 
-        void allowCharging();
-        void prohibitCharging();
-    private:
+                // law::BoolRet BatteryCharger::getChargingStatusSecond();
 
-        bool batteryIsPowerSource();
-        bool batteryNeedsCharge();
-        
-        bool isTemperatureInRange(float start, float end);
-        bool isTemperatureLower(float threshhold);
-        bool isTemperatureHigher(float threshold);
+                // law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber);
 
-        void enableBattery();
-        void disableBattery(); 
+                enum TemperatureRestrictions {
+                    MIN_TEMPERATURE = 0,
+                    MAX_TEMPERATURE = 60
+                };
 
-        // law::BoolRet BatteryCharger::getChargingStatusFirst();
+                typedef enum BatteryChargeStatus {
+                    ERROR = 0x00,
+                    CHARGING_FINISHED = 0x01,
+                    CHARGING_IN_PROGRESS = 0x10
+                } uint8_t;
 
-        // law::BoolRet BatteryCharger::getChargingStatusSecond();
-
-        // law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber);
-
-        enum TemperatureRestrictions {
-            MIN_TEMPERATURE = 0,
-            MAX_TEMPERATURE = 60
+                
         };
-
-        typedef enum BatteryChargeStatus {
-            ERROR = 0x00,
-            CHARGING_FINISHED = 0x01,
-            CHARGING_IN_PROGRESS = 0x10
-        } uint8_t;
-
-        
-};
+    }
+}

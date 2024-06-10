@@ -11,9 +11,9 @@
 #include <magic_enum/magic_enum.hpp>
 #include <static_string/static_string.h>
 
-#include "utils/Utils.h"
 #include "IConfigManager.h"
 #include "utils/FileUtils.h"
+#include "utils/Utils.h"
 
 #define THROW_ERROR(err, reason)                                                            \
     return newError(                                                                        \
@@ -240,35 +240,6 @@ namespace config {
     private:
         static constexpr std::string_view moduleName = "JsonConfigManager";
 
-        static constexpr std::array<std::string_view, (std::size_t(config::Core::ModuleType::DEFAULT) + 1)>
-        kModuleTypeEnumValuesAsStrings = {
-#ifdef ENABLE_ZEDF9P
-                "ZED_F9P",
-#endif
-
-#ifdef ENABLE_SIM68M
-                "SIM68M",
-#endif
-
-#ifdef ENABLE_TAU13X2
-                "TAU13X2",
-#endif
-
-#ifdef ENABLE_ST901P
-                "ST901P",
-#endif
-
-#ifdef ENABLE_QM602
-                "QM602",
-#endif
-
-#ifdef ENABLE_UM681A
-                "UM681A",
-#endif
-
-                "DEFAULT"
-        };
-
     private:
         using SerializedConf = CustomError<std::string>;
         using ValueRef = rapidjson::Value &;
@@ -276,32 +247,18 @@ namespace config {
         using ConstValueRefRet = CustomError<ConstValueRef>;
 
         using UdsUdpServerRet = CustomError<tp::UdsUdpServer>;
-        using TcpServerRet = CustomError<tp::TcpServer>;
-        using Rs232Ret = CustomError<tp::Rs232>;
 
         using ConfigRet = CustomError<Config>;
 
         using ApiRet = CustomError<Api>;
         using ApiTpapiRet = CustomError<Api::Tpapi>;
-        using ApiGnssRet = CustomError<Api::Gnss>;
-        using ApiRtcmRet = CustomError<Api::Rtcm>;
         using ApiTpapiEpRet = CustomError<Api::Tpapi::Ep>;
-        using ApiGnssTransportRet = CustomError<Api::Gnss::Transport>;
-        using ApiRtcmTransportRet = CustomError<Api::Rtcm::Transport>;
-
+        
         using CoreRet = CustomError<Core>;
-        using CoreGnssRet = CustomError<Core::Gnss>;
-        using CoreRtcmRet = CustomError<Core::Rtcm>;
-        using CoreImuRet = CustomError<Core::Imu>;
-        using CoreGnssTransportRet = CustomError<Core::Gnss::Transport>;
-        using CoreGnssPropertiesRet = CustomError<Core::Gnss::Properties>;
-        using CoreRtcmTransportRet = CustomError<Core::Rtcm::Transport>;
-        using CoreRtcmPropertiesRet = CustomError<Core::Rtcm::Properties>;
-        using CoreRtcmPropertiesRtkModeRet = CustomError<Core::Rtcm::Properties::RtkMode>;
-        using CoreRtcmPropertiesRtkModeBaseRet = CustomError<Core::Rtcm::Properties::RtkMode::Base>;
-        using CoreImuPropertiesRet = CustomError<Core::Imu::Properties>;
-        using CoreImuPropertiesInstallModeRet = CustomError<Core::Imu::Properties::InstallMode>;
-        using CoreImuPropertiesInstallModeManualRet = CustomError<Core::Imu::Properties::InstallMode::Manual>;
+        using CoreBatteryRet = CustomError<Core::Battery>;
+        using CoreHeatRet = CustomError<Core::Heat>;
+        using CoreChargeRet = CustomError<Core::Charge>;
+        using CoreHeatTempRangeCelsiusRet = CustomError<Core::Heat::TempRangeCelsius>;
 
         using LoggingRet = CustomError<Logging>;
 
@@ -388,7 +345,7 @@ namespace config {
         Status restore() noexcept override {
             return boost::leaf::try_handle_some(
                     [this]() -> Status {
-                        static constexpr std::string_view kDefaultConfiguration = R"(${DEFAULT_CONFIG})";
+                        static constexpr std::string_view kDefaultConfiguration = R"({"api":{"tpapi":{"ep":{"type":"uds_udp_server","uds_udp_server":{"path":"/var/run/gnssm.ctl.sock"}}},"gnss":{"transport":{"type":"tcp_server","tcp_server":{"port":5821}}},"rtcm":{"transport":{"type":"uds_udp_server","tcp_server":{"port":5822},"uds_udp_server":{"path":"/var/run/gnssm.sock"}}}},"core":{"module_type":"ZED_F9P","gnss":{"transport":{"type":"rs232","rs232":{"device":"/dev/ttymxc1","baudrate":230400,"data_bits":8,"parity":"none","stop_bits":1,"flow_control":false}},"properties":{"navigation_solution_rate_ms":1000}},"rtcm":{"transport":{"type":"rs232","rs232":{"device":"/dev/ttymxc2","baudrate":38400,"data_bits":8,"parity":"none","stop_bits":1,"flow_control":false}},"properties":{"rtk_mode":{"mode":"rover","base":{"lat":580063510,"lon":562873283,"alt":172469}}}},"imu":{"enable":true,"properties":{"install_mode":{"mode":"auto","manual":{"x":100,"y":100,"z":100}}},"odo_sensor":{"enable":true,"type":"j1979","j1979":{"if":"can0","dst_addr":"0x7E8"}}}},"logging":{"level":"INFO"}})";
                         BOOST_LEAF_CHECK(parse(kDefaultConfiguration));
                         saveBrokenConfigFile();
                         BOOST_LEAF_CHECK(save());
@@ -452,34 +409,12 @@ namespace config {
 
             static constexpr std::string_view kTpapiFieldName = "tpapi";
             applyApiTpapi(apiField[Value(kTpapiFieldName.data(), kTpapiFieldName.size())], api.tpapi);
-
-            static constexpr std::string_view kGnssFieldName = "gnss";
-            applyApiGnss(apiField[Value(kGnssFieldName.data(), kGnssFieldName.size())], api.gnss);
-
-            static constexpr std::string_view gRtcmFieldName = "rtcm";
-            applyApiRtcm(apiField[Value(gRtcmFieldName.data(), gRtcmFieldName.size())], api.rtcm);
         }
 
         static void applyApiTpapi(ValueRef &tpapiField, const Api::Tpapi &tpapi) {
             using namespace rapidjson;
             static constexpr std::string_view kEpFieldName = "ep";
             applyApiTpapiEp(tpapiField[Value(kEpFieldName.data(), kEpFieldName.size())], tpapi.ep);
-        }
-
-        static void applyApiGnss(ValueRef &gnssField, const Api::Gnss &gnss) {
-            using namespace rapidjson;
-            static constexpr std::string_view kTransportFieldName = "transport";
-            applyApiGnssTransport(
-                    gnssField[Value(kTransportFieldName.data(), kTransportFieldName.size())],
-                    gnss.transport);
-        }
-
-        static void applyApiRtcm(ValueRef &rtcmField, const Api::Rtcm &rtcm) {
-            using namespace rapidjson;
-            static constexpr std::string_view kTransportFieldName = "transport";
-            applyApiRtcmTransport(
-                    rtcmField[Value(kTransportFieldName.data(), kTransportFieldName.size())],
-                    rtcm.transport);
         }
 
         static void applyApiTpapiEp(ValueRef &epField, const Api::Tpapi::Ep &ep) {
@@ -504,315 +439,107 @@ namespace config {
             );
         }
 
-        static void applyApiGnssTransport(ValueRef &transportField, const Api::Gnss::Transport &transport) {
-            using namespace rapidjson;
-            std::visit(
-                    [&transportField] <typename T>(const T &tp) {
-                        static constexpr std::string_view kTypeFieldName = "type";
-                        auto &typeField
-                                = transportField[rapidjson::Value(kTypeFieldName.data(), kTypeFieldName.size())];
-                        if constexpr (std::same_as<tp::TcpServer, T>) {
-                            static constexpr std::string_view kTcpServerFieldName = "tcp_server";
-                            typeField.SetString(kTcpServerFieldName.data(), kTcpServerFieldName.size());
-                            auto &tcpServerField =
-                                    transportField[Value(kTcpServerFieldName.data(), kTcpServerFieldName.size())];
-
-                            static constexpr std::string_view kPortFieldName = "port";
-                            tcpServerField[Value(kPortFieldName.data(), kPortFieldName.size())] = Value(tp.port);
-                        }
-                    },
-                    transport
-            );
-        }
-
-        static void applyApiRtcmTransport(ValueRef &transportField, const Api::Rtcm::Transport &transport) {
-            using namespace rapidjson;
-            std::visit(
-                    [&transportField] <typename T>(const T &tp) {
-                        static constexpr std::string_view kTypeFieldName = "type";
-                        auto &typeField
-                                = transportField[Value(kTypeFieldName.data(), kTypeFieldName.size())];
-                        if constexpr (std::same_as<tp::TcpServer, T>) {
-                            static constexpr std::string_view kTcpServerFieldName = "tcp_server";
-                            typeField.SetString(kTcpServerFieldName.data(), kTcpServerFieldName.size());
-                            auto &tcpServerField =
-                                    transportField[Value(kTcpServerFieldName.data(), kTcpServerFieldName.size())];
-
-                            static constexpr std::string_view kPortFieldName = "port";
-                            tcpServerField[Value(kPortFieldName.data(), kPortFieldName.size())] = Value(tp.port);
-                        } else if constexpr (std::same_as<tp::UdsUdpServer, T>) {
-                            static constexpr std::string_view kUdsUdpServerFieldName = "uds_udp_server";
-                            typeField = Value(kUdsUdpServerFieldName.data(), kUdsUdpServerFieldName.size());
-
-                            static constexpr std::string_view kPathFieldName = "path";
-                            transportField
-                            [Value(kUdsUdpServerFieldName.data(), kUdsUdpServerFieldName.size())]
-                            [Value(kPathFieldName.data(), kPathFieldName.size())] = Value(tp.path.data(), tp.path.size());
-                        }
-                    },
-                    transport
-            );
-
-        }
-
         static void applyCore(ValueRef &coreField, const Core &core) {
             using namespace rapidjson;
 
-            const auto moduleTypeAsString = magic_enum::enum_name(core.moduleType);
-            static constexpr std::string_view kModuleTypeFieldName = "module_type";
-            coreField[Value(kModuleTypeFieldName.data(), kModuleTypeFieldName.size())] =
-                    Value(moduleTypeAsString.data(), moduleTypeAsString.size());
+            static constexpr std::string_view kBatteryFieldName = "battery";
+            applyCoreBattery(coreField[Value(kBatteryFieldName.data(), kBatteryFieldName.size())],
+                    core.battery);
 
-            static constexpr std::string_view kGnssFieldName = "gnss";
-            applyCoreGnss(
-                    coreField[Value(kGnssFieldName.data(), kGnssFieldName.size())],
-                    core.gnss);
+            static constexpr std::string_view kHeatFieldName = "heat";
+            applyCoreHeat(coreField[Value(kHeatFieldName.data(), kHeatFieldName.size())],
+                    core.heat);
 
-            static constexpr std::string_view kRtcmFieldName = "rtcm";
-            applyCoreRtcm(coreField[Value(kRtcmFieldName.data(), kRtcmFieldName.size())], core.rtcm);
-
-            static constexpr std::string_view kImuFieldName = "imu";
-            applyCoreImu(coreField[Value(kImuFieldName.data(), kImuFieldName.size())], core.imu);
+            static constexpr std::string_view kChargeFieldName = "charge";
+            applyCoreCharge(coreField[Value(kChargeFieldName.data(), kChargeFieldName.size())],
+                    core.charge);
         }
 
-        static void applyCoreGnss(ValueRef &gnssField, const Core::Gnss &gnss) {
+        static void applyCoreBattery(ValueRef &batteryField, const Core::Battery &battery) {
             using namespace rapidjson;
+            static constexpr std::string_view kConnectAwaitTimeoutSec = "connect_await_timeout_sec";
+            batteryField[Value(kConnectAwaitTimeoutSec.data(), kConnectAwaitTimeoutSec.size())] = 
+                Value(battery.connectAwaitTimeoutSec.count());
 
-            static constexpr std::string_view kTransportFieldName = "transport";
-            applyCoreGnssTransport(
-                    gnssField[Value(kTransportFieldName.data(), kTransportFieldName.size())], gnss.transport);
-
-            static constexpr std::string_view kPropertiesFieldName = "properties";
-            applyCoreGnssProperties(
-                    gnssField[Value(kPropertiesFieldName.data(), kPropertiesFieldName.size())], gnss.properties);
+            static constexpr std::string_view kActPwrSourceCheckTimeoutHours = "act_pwr_source_check_timeout_h";
+            batteryField[Value(kActPwrSourceCheckTimeoutHours.data(), kActPwrSourceCheckTimeoutHours.size())] = 
+                Value(battery.actPwrSourceCheckTimeoutHours.count());
         }
 
-        static void applyCoreRtcm(ValueRef &rtcmField, const Core::Rtcm &rtcm) {
+        static void applyCoreHeat(ValueRef &heatField, const Core::Heat &heat) {
             using namespace rapidjson;
 
-            static constexpr std::string_view kTransportFieldName = "transport";
-            applyCoreRtcmTransport(
-                    rtcmField[Value(kTransportFieldName.data(), kTransportFieldName.size())], rtcm.transport);
+            static constexpr std::string_view kHeatDurationH = "heat_duration_h";
+            heatField[Value(kHeatDurationH.data(), kHeatDurationH.size())] = 
+                Value(heat.heatDurationH.count());
 
-            static constexpr std::string_view kPropertiesFieldName = "properties";
-            applyCoreRtcmProperties(
-                    rtcmField[Value(kPropertiesFieldName.data(), kPropertiesFieldName.size())], rtcm.properties);
+            static constexpr std::string_view kTempRangeRetryTimeoutH = "temp_range_retry_timeout_h";
+            heatField[Value(kTempRangeRetryTimeoutH.data(), kTempRangeRetryTimeoutH.size())] = 
+                Value(heat.tempRangeRetryTimeoutH.count());
+
+            static constexpr std::string_view kTempRangeCelsius = "temp_range_celsius";
+            applyCoreHeatTempRangeCelsius(heatField[Value(kTempRangeCelsius.data(), kTempRangeCelsius.size())],
+                    heat.tempRangeCelsius);
         }
 
-        static void applyCoreImu(ValueRef &imuField, const Core::Imu &imu) {
+        static void applyCoreCharge(ValueRef &chargeField, const Core::Charge &charge) {
             using namespace rapidjson;
 
-            static constexpr std::string_view kEnableFieldName = "enable";
-            imuField[Value(kEnableFieldName.data(), kEnableFieldName.size())] = imu.enable;
+            static constexpr std::string_view kStartChargeAtVolts = "start_charge_at_volts";
+            chargeField[Value(kStartChargeAtVolts.data(), kStartChargeAtVolts.size())] = 
+                Value(float(charge.startChargeAtVolts));
 
-            static constexpr std::string_view kPropertiesFieldName = "properties";
-            applyCoreImuProperties(
-                    imuField[Value(kPropertiesFieldName.data(), kPropertiesFieldName.size())], imu.properties);
+            static constexpr std::string_view kTargetBatteryVoltage = "target_battery_voltage";
+            chargeField[Value(kTargetBatteryVoltage.data(), kTargetBatteryVoltage.size())] = 
+                Value(float(charge.targetBatteryVoltage));
+            
+            static constexpr std::string_view kChargeStatusUpdatePeriodH = "charge_status_update_period_h";
+            chargeField[Value(kChargeStatusUpdatePeriodH.data(), kChargeStatusUpdatePeriodH.size())] = 
+                Value(charge.chargeStatusUpdatePeriodH.count());
+        }
+
+        static void applyCoreHeatTempRangeCelsius(ValueRef &tempRangeCelsiusField, const Core::Heat::TempRangeCelsius &tempRangeCelsius) {
+            using namespace rapidjson;
+
+            static constexpr std::string_view kMin = "min";
+            tempRangeCelsiusField[Value(kMin.data(), kMin.size())] = 
+                Value(tempRangeCelsius.min);
+
+            static constexpr std::string_view kMax = "max";
+            tempRangeCelsiusField[Value(kMax.data(), kMax.size())] = 
+                Value(tempRangeCelsius.max);
         }
 
         static void applyLogging(ValueRef &loggingField, const Logging &logging) {
             loggingField["level"].SetString(logging.level.data(), logging.level.size());
         }
 
-        static void applyCoreGnssTransport(ValueRef &transportField, const Core::Gnss::Transport &transport) {
-            using namespace rapidjson;
-            std::visit(
-                    [&transportField] <typename T>(const T &tp) {
-                        static constexpr std::string_view kTypeFieldName = "type";
-                        auto &typeField
-                                = transportField[Value(kTypeFieldName.data(), kTypeFieldName.size())];
-                        if constexpr (std::same_as<tp::Rs232, T>) {
-                            static constexpr std::string_view kRs232FieldName = "rs232";
-                            typeField.SetString(kRs232FieldName.data(), kRs232FieldName.size());
-                            auto &rs232Field =
-                                    transportField[Value(kRs232FieldName.data(), kRs232FieldName.size())];
-
-                            static constexpr std::string_view kDeviceFieldName = "device";
-                            rs232Field[Value(kDeviceFieldName.data(), kDeviceFieldName.size())] =
-                                    Value(tp.device.data(), tp.device.size());
-
-                            static constexpr std::string_view kBaudrateFieldName = "baudrate";
-                            rs232Field[Value(kBaudrateFieldName.data(), kBaudrateFieldName.size())] = Value(tp.baudrate);
-
-                            static constexpr std::string_view kDataBitsFieldName = "data_bits";
-                            rs232Field[Value(kDataBitsFieldName.data(), kDataBitsFieldName.size())] =
-                                    Value(std::uint8_t(tp.dataBits));
-                            const std::string_view parityValue = (
-                                tp.parity == tp::Rs232::Parity::NONE ? "none" : (
-                                    (tp.parity == tp::Rs232::Parity::EVEN) ? "even" : "odd")
-                                );
-                            static constexpr std::string_view kParityFieldName = "parity";
-                            rs232Field[Value(kParityFieldName.data(), kParityFieldName.size())] =
-                                    Value(parityValue.data(), parityValue.size());
-
-                            static constexpr std::string_view kStopBitsFieldName = "stop_bits";
-                            rs232Field[Value(kStopBitsFieldName.data(), kStopBitsFieldName.size())] =
-                                    Value(std::uint8_t(tp.stopBits));
-
-                            static constexpr std::string_view kFlowControlFieldName = "flow_control";
-                            rs232Field[Value(kFlowControlFieldName.data(), kFlowControlFieldName.size())] =
-                                    Value(bool(tp.flowControl));
-                        }
-                    },
-                    transport
-            );
-        }
-
-        static void applyCoreGnssProperties(ValueRef &propertiesField, const Core::Gnss::Properties &properties) {
-            using namespace rapidjson;
-            static constexpr std::string_view kNavigationSolutionRateFieldName = "navigation_solution_rate_ms";
-            propertiesField[Value(kNavigationSolutionRateFieldName.data(), kNavigationSolutionRateFieldName.size())] =
-                    Value(properties.navigationSolutionRate.count());
-        }
-
-        static void applyCoreRtcmTransport(ValueRef &rtcmField, const Core::Rtcm::Transport &transport) {
-            using namespace rapidjson;
-            std::visit(
-                    [&rtcmField] <typename T>(const T &tp) {
-                        static constexpr std::string_view kTypeFieldName = "type";
-                        auto &typeField
-                                = rtcmField[Value(kTypeFieldName.data(), kTypeFieldName.size())];
-                        if constexpr (std::same_as<tp::TcpServer, T>) {
-                            static constexpr std::string_view kTcpServerFieldValue = "tcp_server";
-                            typeField = Value(kTcpServerFieldValue.data(), kTcpServerFieldValue.size());
-                            auto &tcpServerField =
-                                    rtcmField[Value(kTcpServerFieldValue.data(), kTcpServerFieldValue.size())];
-
-                            static constexpr std::string_view kPortFieldName = "port";
-                            tcpServerField[Value(kPortFieldName.data(), kPortFieldName.size())] = Value(tp.port);
-                        }
-                    },
-                    transport
-            );
-        }
-
-        static void applyCoreRtcmProperties(ValueRef &propertiesField, const Core::Rtcm::Properties &properties) {
-            using namespace rapidjson;
-            static constexpr std::string_view kRtkModeFieldName = "rtk_mode";
-            applyCoreRtcmPropertiesRtkMode(
-                    propertiesField[Value(kRtkModeFieldName.data(), kRtkModeFieldName.size())],
-                    properties.rtkMode);
-        }
-
-        static void applyCoreImuProperties(ValueRef &propertiesField, const Core::Imu::Properties &properties) {
-            using namespace rapidjson;
-            static constexpr std::string_view kInstallModeFieldName = "install_mode";
-            applyCoreImuPropertiesInstallMode(
-                    propertiesField[Value(kInstallModeFieldName.data(), kInstallModeFieldName.size())],
-                    properties.installMode);
-        }
-
-        static void
-        applyCoreRtcmPropertiesRtkMode(ValueRef &rtkModeField, const Core::Rtcm::Properties::RtkMode &rtkMode) {
-            using namespace rapidjson;
-            static constexpr std::string_view kModeFieldName = "mode";
-            switch (rtkMode.mode) {
-                case Core::Rtcm::Properties::RtkMode::Mode::BASE: {
-                    static constexpr std::string_view kBaseFieldName = "base";
-                    rtkModeField[Value(kModeFieldName.data(), kModeFieldName.size())] =
-                             Value(kBaseFieldName.data(), kBaseFieldName.size());
-                    applyCoreRtcmPropertiesRtkModeBase(
-                            rtkModeField[Value(kBaseFieldName.data(), kBaseFieldName.size())], rtkMode.base);
-                    break;
-                }
-                case Core::Rtcm::Properties::RtkMode::Mode::ROVER: {
-                    static constexpr std::string_view kModeRoverValue = "rover";
-                    rtkModeField[Value(kModeFieldName.data(), kModeFieldName.size())] =
-                        Value(kModeRoverValue.data(), kModeRoverValue.size());
-                    break;
-                }
-            }
-        }
-
-        static void
-        applyCoreImuPropertiesInstallMode(
-                ValueRef &installModeField, const Core::Imu::Properties::InstallMode &installMode) {
-            using namespace rapidjson;
-            static constexpr std::string_view kModeFieldName = "mode";
-            switch (installMode.mode) {
-                case Core::Imu::Properties::InstallMode::Mode::MANUAL: {
-                    static constexpr std::string_view kManualFieldName = "manual";
-                    installModeField[Value(kModeFieldName.data(), kModeFieldName.size())] =
-                             Value(kManualFieldName.data(), kManualFieldName.size());
-                    applyCoreImuPropertiesInstallModeManual(
-                            installModeField[Value(kManualFieldName.data(), kManualFieldName.size())], installMode.manual);
-                    break;
-                }
-                case Core::Imu::Properties::InstallMode::Mode::AUTO: {
-                    static constexpr std::string_view kModeAutoValue = "auto";
-                    installModeField[Value(kModeFieldName.data(), kModeFieldName.size())] =
-                        Value(kModeAutoValue.data(), kModeAutoValue.size());
-                    break;
-                }
-            }
-        }
-
-        static void
-        applyCoreRtcmPropertiesRtkModeBase(ValueRef &baseField, const Core::Rtcm::Properties::RtkMode::Base &base) {
-            using namespace rapidjson;
-
-            static constexpr std::string_view kLatFieldName = "lat";
-            baseField[Value(kLatFieldName.data(), kLatFieldName.size())] = base.lat;
-
-            static constexpr std::string_view kLonFieldName = "lon";
-            baseField[Value(kLonFieldName.data(), kLonFieldName.size())] = base.lon;
-
-            static constexpr std::string_view kAltFieldName = "alt";
-            baseField[Value(kAltFieldName.data(), kAltFieldName.size())] = base.alt;
-        }
-
-        static void
-        applyCoreImuPropertiesInstallModeManual(
-                ValueRef &manualField, const Core::Imu::Properties::InstallMode::Manual &manual) {
-            using namespace rapidjson;
-
-            static constexpr std::string_view kXFieldName = "x";
-            manualField[Value(kXFieldName.data(), kXFieldName.size())] = manual.x;
-
-            static constexpr std::string_view kYFieldName = "y";
-            manualField[Value(kYFieldName.data(), kYFieldName.size())] = manual.y;
-
-            static constexpr std::string_view kZFieldName = "z";
-            manualField[Value(kZFieldName.data(), kZFieldName.size())] = manual.z;
-        }
-
         static ApiRet parseApi(ConstValueRef apiField) noexcept {
             PARSE_OBJECT_FIELD(tpapiField, apiField, "tpapi");
             BOOST_LEAF_AUTO(tpapi, parseApiTpapi(tpapiField));
 
-            PARSE_OBJECT_FIELD(gnssField, apiField, "gnss");
-            BOOST_LEAF_AUTO(gnss, parseApiGnss(gnssField));
-
-            PARSE_OBJECT_FIELD(rtcmField, apiField, "rtcm");
-            BOOST_LEAF_AUTO(rtcm, parseApiRtcm(rtcmField));
-
             return Api{
-                    .tpapi = tpapi,
-                    .gnss = gnss,
-                    .rtcm = rtcm
+                    .tpapi = tpapi
             };
         }
 
         static CoreRet parseCore(ConstValueRef coreField) noexcept {
-            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(moduleType, coreField, "module_type", etl::string<7>,
-                                                  kModuleTypeEnumValuesAsStrings);
+            PARSE_OBJECT_FIELD(batteryField, coreField, "battery");
+            BOOST_LEAF_AUTO(battery, parseCoreBattery(batteryField));
 
-            PARSE_OBJECT_FIELD(gnssField, coreField, "gnss");
-            BOOST_LEAF_AUTO(gnss, parseCoreGnss(gnssField));
+            PARSE_OBJECT_FIELD(heatField, coreField, "heat");
+            BOOST_LEAF_AUTO(heat, parseCoreHeat(heatField));
 
-            PARSE_OBJECT_FIELD(rtcmField, coreField, "rtcm");
-            BOOST_LEAF_AUTO(rtcm, parseCoreRtcm(rtcmField));
-
-            PARSE_OBJECT_FIELD(imuField, coreField, "imu");
-            BOOST_LEAF_AUTO(imu, parseCoreImu(imuField));
+            PARSE_OBJECT_FIELD(chargeField, coreField, "charge");
+            BOOST_LEAF_AUTO(charge, parseCoreCharge(chargeField));
 
             return Core{
-                    .moduleType = magic_enum::enum_cast<Core::ModuleType>(utils::etlStringToStrView(moduleType)).value(),
-                    .gnss = gnss,
-                    .rtcm = rtcm,
-                    .imu = imu
+                    .battery = battery,
+                    .heat = heat,
+                    .charge = charge
             };
         }
+        
 
         static LoggingRet parseLogging(ConstValueRef loggingField) noexcept {
             PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(level, loggingField, "level", Logging::Level,
@@ -827,22 +554,6 @@ namespace config {
             BOOST_LEAF_AUTO(epValue, parseApiTpapiEp(epField));
             return Api::Tpapi{
                     .ep = epValue
-            };
-        }
-
-        static ApiGnssRet parseApiGnss(ConstValueRef gnssField) noexcept {
-            PARSE_OBJECT_FIELD(transportField, gnssField, "transport");
-            BOOST_LEAF_AUTO(transport, parseApiGnssTransport(transportField));
-            return Api::Gnss{
-                    .transport = transport
-            };
-        }
-
-        static ApiRtcmRet parseApiRtcm(ConstValueRef rtcmField) noexcept {
-            PARSE_OBJECT_FIELD(transportField, rtcmField, "transport");
-            BOOST_LEAF_AUTO(transport, parseCoreRtcmOutputTransport(transportField));
-            return Api::Rtcm{
-                    .transport = transport
             };
         }
 
@@ -864,200 +575,72 @@ namespace config {
             return ret;
         }
 
-        static ApiGnssTransportRet parseApiGnssTransport(ConstValueRef inField) noexcept {
-            PARSE_STRING_FIELD(type, inField, "type", etl::string<sizeof("tcp_server") - 1>);
-            switch (Utils::CRC32(utils::etlStringToStrView(type)).get()) {
-                case COMPILE_TIME_CRC32_STR("tcp_server"): {
-                    PARSE_OBJECT_FIELD(tcpServerField, inField, "tcp_server");
-                    BOOST_LEAF_AUTO(tcpServer, parseTcpServer(tcpServerField));
-                    return tcpServer;
-                }
-                default: {
-                    return newError(RetCode::ROM_CONFIGURATION_UNEXPECTED_FIELD_VALUE, "type");
-                }
-            }
-        }
+        static CoreBatteryRet parseCoreBattery(ConstValueRef batteryField) noexcept {
+            PARSE_UINT_FIELD_CHECK_MIN_MAX(connectAwaitTimeoutSec, batteryField, "connect_await_timeout_sec",
+                                            Core::Battery::kConnectAwaitTimeoutSecMinValue.count(), 
+                                            Core::Battery::kConnectAwaitTimeoutSecMaxValue.count());
 
-        static ApiRtcmTransportRet parseCoreRtcmOutputTransport(ConstValueRef inField) noexcept {
-            PARSE_STRING_FIELD(type, inField, "type", etl::string<sizeof("uds_udp_server") - 1>);
-            switch (Utils::CRC32(utils::etlStringToStrView(type)).get()) {
-                case COMPILE_TIME_CRC32_STR("tcp_server"): {
-                    PARSE_OBJECT_FIELD(tcpServerField, inField, "tcp_server");
-                    BOOST_LEAF_AUTO(tcpServer, parseTcpServer(tcpServerField));
-                    return tcpServer;
-                }
-                case COMPILE_TIME_CRC32_STR("uds_udp_server"): {
-                    PARSE_OBJECT_FIELD(udsUdpServerField, inField, "uds_udp_server");
-                    BOOST_LEAF_AUTO(udsUdpServer, parseUdsUdpServer(udsUdpServerField));
-                    return udsUdpServer;
-                }
-                default: {
-                    return newError(RetCode::ROM_CONFIGURATION_UNEXPECTED_FIELD_VALUE, "type");
-                }
-            }
-        }
+            PARSE_UINT_FIELD_CHECK_MIN_MAX(actPwrSourceCheckTimeoutH, batteryField, "act_pwr_source_check_timeout_h",
+                                            Core::Battery::kActPwrSourceCheckTimeoutHoursMinValue.count(), 
+                                            Core::Battery::kActPwrSourceCheckTimeoutHoursMaxValue.count());
 
-        static CoreGnssRet parseCoreGnss(ConstValueRef gnssField) noexcept {
-            PARSE_OBJECT_FIELD(transportField, gnssField, "transport");
-            BOOST_LEAF_AUTO(transport, parseCoreGnssTransport(transportField));
-
-            PARSE_OBJECT_FIELD(propertiesField, gnssField, "properties");
-            BOOST_LEAF_AUTO(properties, parseCoreGnssProperties(propertiesField));
-
-            return Core::Gnss{
-                    .transport = transport,
-                    .properties = properties
+            return Core::Battery{
+                    .connectAwaitTimeoutSec = std::chrono::seconds(connectAwaitTimeoutSec),
+                    .actPwrSourceCheckTimeoutHours = std::chrono::hours(actPwrSourceCheckTimeoutH)
             };
         }
 
-        static CoreRtcmRet parseCoreRtcm(ConstValueRef rtcmField) noexcept {
-            PARSE_OBJECT_FIELD(transportField, rtcmField, "transport");
-            BOOST_LEAF_AUTO(transport, parseCoreRtcmTransport(transportField));
+        static CoreHeatRet parseCoreHeat(ConstValueRef heatField) noexcept {
+            PARSE_UINT_FIELD_CHECK_MIN_MAX(heatDurationH, heatField, "heat_duration_h",
+                                            Core::Heat::kHeatDurationHMinValue.count(), 
+                                            Core::Heat::kHeatDurationHMaxValue.count());
 
-            PARSE_OBJECT_FIELD(propertiesField, rtcmField, "properties");
-            BOOST_LEAF_AUTO(properties, parseCoreRtcmProperties(propertiesField));
+            PARSE_UINT_FIELD_CHECK_MIN_MAX(tempRangeRetryTimeoutH, heatField, "temp_range_retry_timeout_h",
+                                            Core::Heat::kTempRangeRetryTimeoutHMinValue.count(), 
+                                            Core::Heat::kTempRangeRetryTimeoutHMaxValue.count());
 
-            return Core::Rtcm{
-                    .transport = transport,
-                    .properties = properties
+            PARSE_OBJECT_FIELD(tempRangeCelsiusField, heatField, "temp_range_celsius");
+            BOOST_LEAF_AUTO(tempRangeCelsius, parseCoreHeatTempRangeCelsius(tempRangeCelsiusField));
+
+            return Core::Heat{
+                    .heatDurationH = std::chrono::hours(heatDurationH),
+                    .tempRangeRetryTimeoutH = std::chrono::hours(tempRangeRetryTimeoutH),
+                    .tempRangeCelsius = tempRangeCelsius
             };
         }
 
-        static CoreImuRet parseCoreImu(ConstValueRef imuField) noexcept {
-            PARSE_BOOL_FIELD(enable, imuField, "enable");
+        static CoreChargeRet parseCoreCharge(ConstValueRef chargeField) noexcept {
+            PARSE_UINT_FIELD_CHECK_MIN_MAX(chargeStatusUpdatePeriodH, chargeField, "charge_status_update_period_h",
+                                            Core::Charge::kChargeStatusUpdatePeriodHMinValue.count(), 
+                                            Core::Charge::kChargeStatusUpdatePeriodHMaxValue.count());
+            
+            PARSE_FLOAT_FIELD_CHECK_MIN_MAX(startChargeAtVolts, chargeField, "start_charge_at_volts",
+                                            Core::Charge::kStartChargeAtVoltsMinValue,
+                                            Core::Charge::kStartChargeAtVoltsMaxValue);
 
-            PARSE_OBJECT_FIELD(propertiesField, imuField, "properties");
-            BOOST_LEAF_AUTO(properties, parseCoreImuProperties(propertiesField));
-
-            return Core::Imu{
-                    .enable = enable,
-                    .properties = properties
+            PARSE_FLOAT_FIELD_CHECK_MIN_MAX(targetBatteryVoltage, chargeField, "target_battery_voltage",
+                                            Core::Charge::kTargetBatteryVoltageMinValue,
+                                            Core::Charge::kTargetBatteryVoltageMaxValue);
+            
+            return Core::Charge{
+                    .chargeStatusUpdatePeriodH = std::chrono::hours(chargeStatusUpdatePeriodH),
+                    .startChargeAtVolts = float(startChargeAtVolts),
+                    .targetBatteryVoltage = float(targetBatteryVoltage)
             };
         }
 
-        static CoreGnssTransportRet parseCoreGnssTransport(ConstValueRef inField) noexcept {
-            PARSE_STRING_FIELD(type, inField, "type", etl::string<sizeof("rs232") - 1>);
-            switch (Utils::CRC32(utils::etlStringToStrView(type)).get()) {
-                case COMPILE_TIME_CRC32_STR("rs232"): {
-                    PARSE_OBJECT_FIELD(rs232Field, inField, "rs232");
-                    BOOST_LEAF_AUTO(rs232, parseRs232(rs232Field));
-                    return rs232;
-                }
-                default: {
-                    return newError(RetCode::ROM_CONFIGURATION_UNEXPECTED_FIELD_VALUE, "type");
-                }
-            }
-        }
-
-        static CoreGnssPropertiesRet parseCoreGnssProperties(ConstValueRef propertiesField) noexcept {
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(navigationSolutionRate, propertiesField, "navigation_solution_rate_ms",
-                                           Core::Gnss::Properties::kNavigationSolutionRateMin.count(),
-                                           Core::Gnss::Properties::kNavigationSolutionRateMax.count());
-            return Core::Gnss::Properties{
-                    .navigationSolutionRate = std::chrono::milliseconds(navigationSolutionRate)
-            };
-        }
-
-        static CoreGnssTransportRet parseCoreRtcmTransport(ConstValueRef inField) noexcept {
-            PARSE_STRING_FIELD(type, inField, "type", etl::string<sizeof("rs232") - 1>);
-            switch (Utils::CRC32(utils::etlStringToStrView(type)).get()) {
-                case COMPILE_TIME_CRC32_STR("rs232"): {
-                    PARSE_OBJECT_FIELD(rs232Field, inField, "rs232");
-                    BOOST_LEAF_AUTO(rs232, parseRs232(rs232Field));
-                    return rs232;
-                }
-                default: {
-                    return newError(RetCode::ROM_CONFIGURATION_UNEXPECTED_FIELD_VALUE, "type");
-                }
-            }
-        }
-
-        static CoreRtcmPropertiesRet parseCoreRtcmProperties(ConstValueRef propertiesField) noexcept {
-            PARSE_OBJECT_FIELD(rtkModeField, propertiesField, "rtk_mode");
-            BOOST_LEAF_AUTO(rtkMode, parseCoreRtcmPropertiesRtkMode(rtkModeField));
-
-            return Core::Rtcm::Properties{
-                    .rtkMode = rtkMode
-            };
-        }
-
-        static CoreImuPropertiesRet parseCoreImuProperties(ConstValueRef propertiesField) noexcept {
-            PARSE_OBJECT_FIELD(installModeField, propertiesField, "install_mode");
-            BOOST_LEAF_AUTO(installMode, parseCoreImuPropertiesInstallMode(installModeField));
-
-            return Core::Imu::Properties{
-                    .installMode = installMode
-            };
-        }
-
-        static CoreRtcmPropertiesRtkModeRet parseCoreRtcmPropertiesRtkMode(ConstValueRef rtkModeField) noexcept {
-            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(
-                    mode, rtkModeField, "mode", etl::string<(sizeof("rover") - 1)>,
-                    Core::Rtcm::Properties::RtkMode::kModeAllowValues);
-
-            PARSE_OBJECT_FIELD(baseField, rtkModeField, "base");
-            BOOST_LEAF_AUTO(base, parseCoreRtcmPropertiesRtkModeBase(baseField));
-
-            return Core::Rtcm::Properties::RtkMode{
-                    .mode = Core::Rtcm::Properties::RtkMode::Mode(mode[0]),
-                    .base = base
-            };
-        }
-
-        static CoreImuPropertiesInstallModeRet parseCoreImuPropertiesInstallMode(ConstValueRef installModeField) noexcept {
-            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(
-                    mode, installModeField, "mode", etl::string<(sizeof("manual") - 1)>,
-                    Core::Imu::Properties::InstallMode::kModeAllowValues);
-
-            PARSE_OBJECT_FIELD(manualField, installModeField, "manual");
-            BOOST_LEAF_AUTO(manual, parseCoreImuPropertiesInstallModeManual(manualField));
-
-            return Core::Imu::Properties::InstallMode{
-                    .mode = Core::Imu::Properties::InstallMode::Mode(mode[0]),
-                    .manual = manual
-            };
-        }
-
-        static CoreRtcmPropertiesRtkModeBaseRet parseCoreRtcmPropertiesRtkModeBase(ConstValueRef baseField) noexcept {
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    lat, baseField, "lat",
-                    Core::Rtcm::Properties::RtkMode::Base::kLatMinValue,
-                    Core::Rtcm::Properties::RtkMode::Base::kLatMaxValue);
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    lon, baseField, "lon",
-                    Core::Rtcm::Properties::RtkMode::Base::kLonMinValue,
-                    Core::Rtcm::Properties::RtkMode::Base::kLonMaxValue);
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    alt, baseField, "alt",
-                    Core::Rtcm::Properties::RtkMode::Base::kAltMinValue,
-                    Core::Rtcm::Properties::RtkMode::Base::kAltMaxValue);
-
-            return Core::Rtcm::Properties::RtkMode::Base{
-                    .lat = lat,
-                    .lon = lon,
-                    .alt = alt
-            };
-        }
-
-        static CoreImuPropertiesInstallModeManualRet
-        parseCoreImuPropertiesInstallModeManual(ConstValueRef manualField) noexcept {
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    x, manualField, "x",
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMinValue,
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMaxValue);
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    y, manualField, "y",
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMinValue,
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMaxValue);
-            PARSE_INT_FIELD_CHECK_MIN_MAX(
-                    z, manualField, "z",
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMinValue,
-                    Core::Imu::Properties::InstallMode::Manual::kAngleMaxValue);
-
-            return Core::Imu::Properties::InstallMode::Manual{
-                    .x = x,
-                    .y = y,
-                    .z = z
+        static CoreHeatTempRangeCelsiusRet parseCoreHeatTempRangeCelsius(ConstValueRef tempRangeCelsiusField) noexcept {
+            PARSE_INT_FIELD_CHECK_MIN_MAX(min, tempRangeCelsiusField, "min",
+                                            Core::Heat::TempRangeCelsius::kMinMinValue,
+                                            Core::Heat::TempRangeCelsius::kMinMaxValue);
+            
+            PARSE_INT_FIELD_CHECK_MIN_MAX(max, tempRangeCelsiusField, "max",
+                                            Core::Heat::TempRangeCelsius::kMaxMinValue,
+                                            Core::Heat::TempRangeCelsius::kMaxMaxValue);
+            
+            return Core::Heat::TempRangeCelsius{
+                    .min = min,
+                    .max = max
             };
         }
 
@@ -1065,35 +648,6 @@ namespace config {
             PARSE_STRING_FIELD(path, udsUdpServerField, "path", tp::UdsUdpServer::Path);
             return tp::UdsUdpServer{
                     .path = path
-            };
-        }
-
-        static Rs232Ret parseRs232(ConstValueRef rs232Field) noexcept {
-            PARSE_STRING_FIELD(device, rs232Field, "device", tp::Rs232::Device);
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(baudrate, rs232Field, "baudrate", tp::Rs232::kBaudrateMinVal,
-                                           tp::Rs232::kBaudrateMaxVal);
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(dataBits, rs232Field, "data_bits", tp::Rs232::kDataBitsMinVal,
-                                           tp::Rs232::kDataBitsMaxVal);
-            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(parity, rs232Field, "parity", etl::string<sizeof("none") - 1>,
-                                                  tp::Rs232::kParityAllowValues);
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(stopBits, rs232Field, "stop_bits", tp::Rs232::kStopBitsMinVal,
-                                           tp::Rs232::kStopBitsMaxVal);
-            PARSE_BOOL_FIELD(flowControl, rs232Field, "flow_control");
-            return tp::Rs232{
-                    .device = device,
-                    .baudrate = baudrate,
-                    .dataBits = tp::Rs232::DataBits(dataBits),
-                    .parity = tp::Rs232::Parity(parity[0]),
-                    .stopBits = tp::Rs232::StopBits(stopBits),
-                    .flowControl = tp::Rs232::FlowControl(flowControl)
-            };
-        }
-
-        static TcpServerRet parseTcpServer(ConstValueRef tcpClientField) noexcept {
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(port, tcpClientField, "port", tp::TcpServer::kPortMinValue,
-                                           tp::TcpServer::kPortMaxValue);
-            return tp::TcpServer{
-                    .port = port
             };
         }
 

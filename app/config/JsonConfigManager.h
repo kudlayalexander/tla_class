@@ -11,9 +11,9 @@
 #include <magic_enum/magic_enum.hpp>
 #include <static_string/static_string.h>
 
-#include "utils/Utils.h"
 #include "IConfigManager.h"
 #include "utils/FileUtils.h"
+#include "utils/Utils.h"
 
 #define THROW_ERROR(err, reason)                                                            \
     return newError(                                                                        \
@@ -240,35 +240,6 @@ namespace config {
     private:
         static constexpr std::string_view moduleName = "JsonConfigManager";
 
-        static constexpr std::array<std::string_view, (std::size_t(config::Core::ModuleType::DEFAULT) + 1)>
-        kModuleTypeEnumValuesAsStrings = {
-#ifdef ENABLE_ZEDF9P
-                "ZED_F9P",
-#endif
-
-#ifdef ENABLE_SIM68M
-                "SIM68M",
-#endif
-
-#ifdef ENABLE_TAU13X2
-                "TAU13X2",
-#endif
-
-#ifdef ENABLE_ST901P
-                "ST901P",
-#endif
-
-#ifdef ENABLE_QM602
-                "QM602",
-#endif
-
-#ifdef ENABLE_UM681A
-                "UM681A",
-#endif
-
-                "DEFAULT"
-        };
-
     private:
         using SerializedConf = CustomError<std::string>;
         using ValueRef = rapidjson::Value &;
@@ -285,8 +256,8 @@ namespace config {
         
         using CoreRet = CustomError<Core>;
         using CoreBatteryRet = CustomError<Core::Battery>;
-        using CoreHeatRet = CustomError<Heat>;
-        using CoreChargeRet = CustomError<Charge>;
+        using CoreHeatRet = CustomError<Core::Heat>;
+        using CoreChargeRet = CustomError<Core::Charge>;
         using CoreHeatTempRangeCelsiusRet = CustomError<Core::Heat::TempRangeCelsius>;
 
         using LoggingRet = CustomError<Logging>;
@@ -488,7 +459,7 @@ namespace config {
             using namespace rapidjson;
             static constexpr std::string_view kConnectAwaitTimeoutSec = "connect_await_timeout_sec";
             batteryField[Value(kConnectAwaitTimeoutSec.data(), kConnectAwaitTimeoutSec.size())] = 
-                Value(heat.heatDurationH.count());
+                Value(battery.connectAwaitTimeoutSec.count());
 
             static constexpr std::string_view kActPwrSourceCheckTimeoutHours = "act_pwr_source_check_timeout_h";
             batteryField[Value(kActPwrSourceCheckTimeoutHours.data(), kActPwrSourceCheckTimeoutHours.size())] = 
@@ -516,18 +487,18 @@ namespace config {
 
             static constexpr std::string_view kStartChargeAtVolts = "start_charge_at_volts";
             chargeField[Value(kStartChargeAtVolts.data(), kStartChargeAtVolts.size())] = 
-                Value(chargeField.startChargeAtVolts);
+                Value(float(charge.startChargeAtVolts));
 
             static constexpr std::string_view kTargetBatteryVoltage = "target_battery_voltage";
             chargeField[Value(kTargetBatteryVoltage.data(), kTargetBatteryVoltage.size())] = 
-                Value(chargeField.targetBatteryVoltage);
+                Value(float(charge.targetBatteryVoltage));
             
             static constexpr std::string_view kChargeStatusUpdatePeriodH = "charge_status_update_period_h";
             chargeField[Value(kChargeStatusUpdatePeriodH.data(), kChargeStatusUpdatePeriodH.size())] = 
-                Value(chargeField.chargeStatusUpdatePeriodH.count());
+                Value(charge.chargeStatusUpdatePeriodH.count());
         }
 
-        static void applyCoreHeatTempRangeCelsius(ValueRef &tempRangeCelsiusField, const Core::Heat &tempRangeCelsius) {
+        static void applyCoreHeatTempRangeCelsius(ValueRef &tempRangeCelsiusField, const Core::Heat::TempRangeCelsius &tempRangeCelsius) {
             using namespace rapidjson;
 
             static constexpr std::string_view kMin = "min";
@@ -606,8 +577,8 @@ namespace config {
 
         static CoreBatteryRet parseCoreBattery(ConstValueRef batteryField) noexcept {
             PARSE_UINT_FIELD_CHECK_MIN_MAX(connectAwaitTimeoutSec, batteryField, "connect_await_timeout_sec",
-                                            Core::Battery::kBatteryFieldMinValue.count(), 
-                                            Core::Battery::kBatteryFieldMaxValue.count());
+                                            Core::Battery::kConnectAwaitTimeoutSecMinValue.count(), 
+                                            Core::Battery::kConnectAwaitTimeoutSecMaxValue.count());
 
             PARSE_UINT_FIELD_CHECK_MIN_MAX(actPwrSourceCheckTimeoutH, batteryField, "act_pwr_source_check_timeout_h",
                                             Core::Battery::kActPwrSourceCheckTimeoutHoursMinValue.count(), 
@@ -615,7 +586,7 @@ namespace config {
 
             return Core::Battery{
                     .connectAwaitTimeoutSec = std::chrono::seconds(connectAwaitTimeoutSec),
-                    .actPwrSourceCheckTimeoutH = std::chrono::hours(actPwrSourceCheckTimeoutH)
+                    .actPwrSourceCheckTimeoutHours = std::chrono::hours(actPwrSourceCheckTimeoutH)
             };
         }
 
@@ -625,8 +596,8 @@ namespace config {
                                             Core::Heat::kHeatDurationHMaxValue.count());
 
             PARSE_UINT_FIELD_CHECK_MIN_MAX(tempRangeRetryTimeoutH, heatField, "temp_range_retry_timeout_h",
-                                            Core::Battery::kTempRangeRetryTimeoutHMinValue.count(), 
-                                            Core::Battery::kTempRangeRetryTimeoutHMaxValue.count());
+                                            Core::Heat::kTempRangeRetryTimeoutHMinValue.count(), 
+                                            Core::Heat::kTempRangeRetryTimeoutHMaxValue.count());
 
             PARSE_OBJECT_FIELD(tempRangeCelsiusField, heatField, "temp_range_celsius");
             BOOST_LEAF_AUTO(tempRangeCelsius, parseCoreHeatTempRangeCelsius(tempRangeCelsiusField));
@@ -634,7 +605,7 @@ namespace config {
             return Core::Heat{
                     .heatDurationH = std::chrono::hours(heatDurationH),
                     .tempRangeRetryTimeoutH = std::chrono::hours(tempRangeRetryTimeoutH),
-                    .tempRangeCelsius = tempRangeCelsius;
+                    .tempRangeCelsius = tempRangeCelsius
             };
         }
 
@@ -652,18 +623,18 @@ namespace config {
                                             Core::Charge::kTargetBatteryVoltageMaxValue);
             
             return Core::Charge{
-                    .chargeStatusUpdatePeriodH = std::chrono::hours(connectAwaitTimeoutSec),
+                    .chargeStatusUpdatePeriodH = std::chrono::hours(chargeStatusUpdatePeriodH),
                     .startChargeAtVolts = float(startChargeAtVolts),
-                    .targetBatteryVoltage = float(targetBatteryVoltage);
+                    .targetBatteryVoltage = float(targetBatteryVoltage)
             };
         }
 
         static CoreHeatTempRangeCelsiusRet parseCoreHeatTempRangeCelsius(ConstValueRef tempRangeCelsiusField) noexcept {
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(min, tempRangeCelsiusField, "min",
+            PARSE_INT_FIELD_CHECK_MIN_MAX(min, tempRangeCelsiusField, "min",
                                             Core::Heat::TempRangeCelsius::kMinMinValue,
                                             Core::Heat::TempRangeCelsius::kMinMaxValue);
             
-            PARSE_UINT_FIELD_CHECK_MIN_MAX(max, tempRangeCelsiusField, "max",
+            PARSE_INT_FIELD_CHECK_MIN_MAX(max, tempRangeCelsiusField, "max",
                                             Core::Heat::TempRangeCelsius::kMaxMinValue,
                                             Core::Heat::TempRangeCelsius::kMaxMaxValue);
             

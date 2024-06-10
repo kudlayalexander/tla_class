@@ -15,27 +15,6 @@ enum class RetCode : std::uint8_t {
     ROM_CONFIGURATION_FIELD_VALUE_RANGE_VIOLATION,
     ROM_CONFIGURATION_UNEXPECTED_FIELD_VALUE,
     ROM_CONFIGURATION_INCORRECT_FIELD_TYPE,
-    ROM_CONFIGURATION_CONTAINER_SIZE_EXCEED,
-
-    BLACKBOX_NO_ITEMS,
-
-    WIALON_PACKET_CRC_CHECK_FAILED,
-    WIALON_PACKET_INVALID_STRUCTURE,
-    WIALON_PACKET_INCORRECT_TYPE,
-    WIALON_PACKET_INVALID_ARGUMENT,
-    WIALON_PACKET_CONTAINER_SIZE_EXCEED,
-    WIALON_PACKET_PARAMETER_IS_EMPTY,
-    WIALON_PACKET_PARAMETER_SIZE_TOO_BIG,
-
-    WIALON_CONNECTION_MESSAGE_CACHED,
-    WIALON_CONNECTION_MESSAGE_SEND_ERROR,
-
-    WIALON_NAVIGATION_DATA_PRODUCER_INVALID_NAV_INFO,
-    WIALON_TELEMETRY_CLIENT_MAX_SUBS_COUNT_REACH,
-
-    WIALON_SMC_IO_ERROR,
-
-    WIALON_BLACKBOX_MESSAGE_SIZE_TOO_BIG,
 
     MAX_VALUE
 };
@@ -47,4 +26,28 @@ using Status = ErrorCode::Status;
 
 static boost::leaf::error_id newError(RetCode rc) noexcept {
     return boost::leaf::new_error(rc);
+}
+
+static boost::leaf::error_id newError(RetCode rc, std::string_view reason) noexcept {
+    return boost::leaf::new_error(rc, reason);
+}
+
+static constexpr bool isRomConfigurationError(RetCode rc) {
+    return (rc >= RetCode::ROM_CONFIGURATION_CORRUPT && rc <= RetCode::ROM_CONFIGURATION_INCORRECT_FIELD_TYPE);
+}
+
+static constexpr std::string_view rcToString(RetCode rc) noexcept {
+    constexpr std::array<std::string_view, std::size_t(RetCode::MAX_VALUE)> retCodeStrings = {
+            "Config: configuration corrupt",
+            "Config: configuration load error",
+            "Config: configuration save error",
+            "Config: configuration restore error",
+            "Config: configuration serialize error",
+            "Config: configuration field not present",
+            "Config: configuration string field length is too big",
+            "Config: configuration field value range violation",
+            "Config: configuration unexpected field value",
+            "Config: configuration incorrect field type"
+    };
+    return (std::size_t(rc) < std::size_t(RetCode::MAX_VALUE)) ? retCodeStrings[std::size_t(rc)] : "Unknown Error";
 }
