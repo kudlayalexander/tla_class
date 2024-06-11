@@ -15,26 +15,18 @@ namespace core {
             private:
                 config::Core configCore;
 
+                const law::gpio::SysfsGPIO batteryWarmingGpio {law::gpio::Port::GPIO2, 17};
+                const law::gpio::SysfsGPIO batteryChargingGpio {law::gpio::Port::GPIO2, 27};
+                const law::gpio::SysfsGPIO batteryEnablingGpio {law::gpio::Port::GPIO2, 18};
+
                 float temperature;
                 float voltage;
 
                 battery::Battery battery;
             public:
-                BatteryCharger();
-                BatteryCharger(const battery::Battery &battery);
                 BatteryCharger(const battery::Battery &battery, config::Core configCore_);
                 
-                void startAutoCharge(const char* i2c_path = "/dev/i2c-2");
-
-                std::chrono::seconds getConnectAwaitTimeoutSec();
-                std::chrono::hours getHeatDurationH();
-                std::chrono::hours getTempRangeRetryTimeoutH();
-                float getStartChargeAtVolts();
-                std::chrono::hours getChargeStatusUpdatePeriodH();
-                std::chrono::hours getActPwrSourceCheckTimeoutH();
-                float getTargetBatteryVoltage();
-                int8_t getMinTemperature();
-                int8_t getMaxTemperature();
+                void startAutoCharge(std::string_view i2c_path = "/dev/i2c-2");
             private:
                 void startWarming();
                 void endWarming();
@@ -64,8 +56,6 @@ namespace core {
                     CHARGING_FINISHED = 0x01,
                     CHARGING_IN_PROGRESS = 0x10
                 } uint8_t;
-
-                
         };
     }
 }

@@ -10,7 +10,7 @@ namespace core{
                 const char* i2cPath;
             public:
                 Battery();
-                Battery(const tla2024::TLA2024 &adc, const char* i2cPath = I2C_DEFAULT_PATH);
+                Battery(const TLA2024 &adc, const char* i2cPath = I2C_DEFAULT_PATH);
 
                 constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
                     return (r1 + r2) / r2;
@@ -20,7 +20,7 @@ namespace core{
                 float getVoltage();
                 bool isBatteryConnected();
 
-                void setAdc(const tla2024::TLA2024 &adc);
+                void setAdc(const TLA2024 &adc);
                 void setI2CPath(const char* i2cPath);
 
                 void connectBattery();

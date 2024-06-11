@@ -2,22 +2,22 @@
 
 core::battery::Battery::Battery() {
     adc = core::tla2024::TLA2024();
-    adc.setFullScaleRange(core::tla2024::TLA2024::FSR_6_144V);
+    adc.setFullScaleRange(core::TLA2024::FSR_6_144V);
     i2cPath = I2C_DEFAULT_PATH;
 }
 
-core::battery::Battery::Battery(const core::tla2024::TLA2024 &adc_, const char *i2cPath_) {
+core::battery::Battery::Battery(const core::TLA2024 &adc_, const char *i2cPath_) {
     adc = adc_;
     i2cPath = i2cPath_;
 };
 
 float core::battery::Battery::getTemperature() {
-    float voltage = adc.readVoltage(core::tla2024::TLA2024::MUX_1_GND);
+    float voltage = adc.readVoltage(core::TLA2024::MUX_1_GND);
     return calculateTemperature(voltage);
 }
 
 float core::battery::Battery::getVoltage() {
-    float voltage = adc.readVoltage(core::tla2024::TLA2024::MUX_0_GND);
+    float voltage = adc.readVoltage(core::TLA2024::MUX_0_GND);
     auto batteryVoltageScaleFactor = calculateVoltageDivisionScaleFactor(430,110);
     return voltage * batteryVoltageScaleFactor;
 }
@@ -36,7 +36,7 @@ bool core::battery::Battery::isBatteryConnected() {
     return adc.connectToSlave(i2cPath);
 }
 
-void core::battery::Battery::setAdc(const core::tla2024::TLA2024 &adc_) {
+void core::battery::Battery::setAdc(const core::TLA2024 &adc_) {
     adc = adc_;
 }
 

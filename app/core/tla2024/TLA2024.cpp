@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-core::tla2024::TLA2024::TLA2024() {
+core::TLA2024::TLA2024() {
     i2cFd = 0;
     dr = DR_1600_SPS;
     fsr = FSR_2_048V;
@@ -12,7 +12,7 @@ core::tla2024::TLA2024::TLA2024() {
     setConversionTime();
 }
 
-bool core::tla2024::TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddress) {
+bool core::TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddress) {
     if (i2cFd > 0) {
         close(i2cFd);
     }
@@ -36,14 +36,14 @@ bool core::tla2024::TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddr
     return 1;
 };
 
-void core::tla2024::TLA2024::disconnect() {
+void core::TLA2024::disconnect() {
     if (i2cFd > 0) {
         close(i2cFd);
     }
     std::cout << "File descriptor was closed" << std::endl;
 };
 
-void core::tla2024::TLA2024::setConfiguration(bool continuous) {
+void core::TLA2024::setConfiguration(bool continuous) {
     uint16_t config = RESERVED_ALWAYS;
 
     if (continuous) {
@@ -64,7 +64,7 @@ void core::tla2024::TLA2024::setConfiguration(bool continuous) {
     writeRegister(REGISTER_POINTER_HITHRESH, 0x8000);
 }
 
-int16_t core::tla2024::TLA2024::readRaw(uint16_t mux_) {
+int16_t core::TLA2024::readRaw(uint16_t mux_) {
     setMultiplexerConfig(mux_);
     setConfiguration(false);
 
@@ -85,13 +85,13 @@ int16_t core::tla2024::TLA2024::readRaw(uint16_t mux_) {
     return (int16_t)result;
 }
 
-float core::tla2024::TLA2024::readVoltage(uint16_t mux_) {
+float core::TLA2024::readVoltage(uint16_t mux_) {
     uint16_t rawVoltage = readRaw(mux_);
     return calculateVoltage(rawVoltage);
 }
 
 
-uint16_t core::tla2024::TLA2024::readRegister(uint8_t reg) {
+uint16_t core::TLA2024::readRegister(uint8_t reg) {
     uint8_t buffer[3];
 
     if (write(i2cFd, &reg, 1) != 1)
@@ -103,7 +103,7 @@ uint16_t core::tla2024::TLA2024::readRegister(uint8_t reg) {
     return ((buffer[0] << 8) | buffer[1]);
 }
 
-int16_t core::tla2024::TLA2024::writeRegister(uint8_t reg, uint16_t data) {
+int16_t core::TLA2024::writeRegister(uint8_t reg, uint16_t data) {
     uint8_t buffer[3];
     buffer[0] = reg;
     buffer[1] = (uint8_t)(data >> 8);
@@ -116,11 +116,11 @@ int16_t core::tla2024::TLA2024::writeRegister(uint8_t reg, uint16_t data) {
     return 3;
 }
 
-uint16_t core::tla2024::TLA2024::getConversionTime() {
+uint16_t core::TLA2024::getConversionTime() {
     return conversionTime;
 }
  
-void core::tla2024::TLA2024::setConversionTime() {
+void core::TLA2024::setConversionTime() {
     switch (dr) {
         case (DR_128_SPS):
             conversionTime = 1000000 / 128 + 5;
@@ -151,48 +151,48 @@ void core::tla2024::TLA2024::setConversionTime() {
     conversionTime = (uint16_t)(conversionTime * 1.1);
 }
 
-void core::tla2024::TLA2024::setFullScaleRange(uint16_t fsr_) {
+void core::TLA2024::setFullScaleRange(uint16_t fsr_) {
     fsr = fsr_;
 }
  
-uint16_t core::tla2024::TLA2024::getFullScaleRange() {
+uint16_t core::TLA2024::getFullScaleRange() {
     return fsr;
 }
  
-void core::tla2024::TLA2024::setDataRate(uint16_t dr_) {
+void core::TLA2024::setDataRate(uint16_t dr_) {
     dr = dr_;
     setConversionTime();
 }
  
-uint16_t core::tla2024::TLA2024::getDataRate() {
+uint16_t core::TLA2024::getDataRate() {
     return dr;
 }
  
-void core::tla2024::TLA2024::setMultiplexerConfig(uint16_t mux_) {
+void core::TLA2024::setMultiplexerConfig(uint16_t mux_) {
     mux = mux_;
 }
  
-uint16_t core::tla2024::TLA2024::getMultiplexerConfig() {
+uint16_t core::TLA2024::getMultiplexerConfig() {
     return mux;
 }
  
-void core::tla2024::TLA2024::setOS(uint16_t os_) {
+void core::TLA2024::setOS(uint16_t os_) {
     os = os_;
 }
  
-uint16_t core::tla2024::TLA2024::getOS() {
+uint16_t core::TLA2024::getOS() {
     return os;
 }
  
-void core::tla2024::TLA2024::setMode(uint16_t mode_) {
+void core::TLA2024::setMode(uint16_t mode_) {
     mode = mode_;
 }
  
-uint16_t core::tla2024::TLA2024::getMode() {
+uint16_t core::TLA2024::getMode() {
     return mode;
 }
 
-float core::tla2024::TLA2024::calculateVoltage(uint16_t voltageBits) {
+float core::TLA2024::calculateVoltage(uint16_t voltageBits) {
     uint16_t signMask = 0x800;
     uint16_t numbersMask = 0x7FF;
 

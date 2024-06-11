@@ -73,6 +73,8 @@ file(GLOB sources CONFIGURE_DEPENDS
 add_executable(${PROJECT_NAME} ${includes} ${sources})
 
 find_package(TedixLibrary)
+
+FindTedixLibrary(elaw testing 1.1.1-6-g0d99ca5)
 FindTedixLibrary(tpapi testing 1.2.14-9-g469ba0c)
 FindTedixLibrary(magic_enum stable v0.9.5-1-g7f3b4b0)
 FindTedixLibrary(rapidjson stable 1.1.0)
