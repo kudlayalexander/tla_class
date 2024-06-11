@@ -9,7 +9,7 @@ core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_
     battery = battery_;
 }
 
-BatteryCharger(const battery::Battery &battery, config::Core configCore_) {
+core::bch::BatteryCharger(const battery::Battery &battery, config::Core configCore_) {
     battery = battery_;
     configCore = configCore_;
 }

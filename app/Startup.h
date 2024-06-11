@@ -46,10 +46,8 @@ public:
         auto &configCore = conf.core;
 
         core::tla2024::TLA2024 tla {};
-        core::battery::Battery battery {tla};
-        core::bch::BatteryCharger batteryCharger {
-                                                battery, configCore
-                                                };
+        core::battery::Battery battery { tla };
+        core::bch::BatteryCharger batteryCharger { battery, configCore };
         return startServe();
     }
 
