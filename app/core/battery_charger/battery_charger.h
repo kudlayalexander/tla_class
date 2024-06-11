@@ -8,16 +8,21 @@
 #include <thread>
 #include <iostream>
 #include <law/GPIO/SysfsGPIO.h>
+#include <Logger/Utils.h>
 
 namespace core {
     namespace bch {
         class BatteryCharger {
+            public:
+                static constexpr std::string_view kModuleName = "BatteryChargerModule";
             private:
                 config::Core configCore;
 
-                const law::gpio::SysfsGPIO batteryWarmingGpio {law::gpio::Port::GPIO2, 17};
-                const law::gpio::SysfsGPIO batteryChargingGpio {law::gpio::Port::GPIO2, 27};
-                const law::gpio::SysfsGPIO batteryEnablingGpio {law::gpio::Port::GPIO2, 18};
+                law::gpio::SysfsGPIO batteryWarmingControlGpio;
+                law::gpio::SysfsGPIO batteryEnablingControlGpio;
+                law::gpio::SysfsGPIO batteryChargingControlGpio;
+                law::gpio::SysfsGPIO batteryStatusFirstGpio;
+                law::gpio::SysfsGPIO batteryStatusSecondGpio;
 
                 float temperature;
                 float voltage;
@@ -43,19 +48,6 @@ namespace core {
 
                 void enableBattery();
                 void disableBattery(); 
-
-                // law::BoolRet BatteryCharger::getChargingStatusFirst();
-
-                // law::BoolRet BatteryCharger::getChargingStatusSecond();
-
-                // law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber);
-
-
-                typedef enum BatteryChargeStatus {
-                    ERROR = 0x00,
-                    CHARGING_FINISHED = 0x01,
-                    CHARGING_IN_PROGRESS = 0x10
-                } uint8_t;
         };
     }
 }
