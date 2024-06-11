@@ -47,9 +47,9 @@ public:
 
         core::tla2024::TLA2024 tla {};
         core::battery::Battery battery {tla};
-        core::bch::BatteryCharger batteryCharger {battery};
-        
-        batteryCharger.make(configCore);
+        core::bch::BatteryCharger batteryCharger {
+                                                battery, configCore
+                                                };
         return startServe();
     }
 

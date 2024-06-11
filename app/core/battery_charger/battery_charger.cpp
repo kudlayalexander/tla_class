@@ -9,8 +9,8 @@ core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_
 }
 
 core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_, std::chrono::seconds connectAwaitTimeoutSec_, std::chrono::hours heatDurationH_, std::chrono::hours tempRangeRetryTimeoutH_, 
-                                float startChargeAtVolts_, std::chrono::hours chargeStatusUpdatePeriodH_,
-                                std::chrono::hours actPwrSourceCheckTimeoutH_, float targetBatteryVoltage_) {
+                                float startChargeAtVolts_, std::chrono::hours chargeStatusUpdatePeriodH_, std::chrono::hours actPwrSourceCheckTimeoutH_,
+                                float targetBatteryVoltage_, std::int8_t minTemperature_, std::int8_t maxTemperature_) {
     battery = battery_;
     connectAwaitTimeoutSec = connectAwaitTimeoutSec_;
     heatDurationH = heatDurationH_;
@@ -20,16 +20,8 @@ core::bch::BatteryCharger::BatteryCharger(const core::battery::Battery &battery_
     actPwrSourceCheckTimeoutH = actPwrSourceCheckTimeoutH_;
     targetBatteryVoltage = targetBatteryVoltage_;
     chargeStatusUpdatePeriodH = chargeStatusUpdatePeriodH_;
-}
-
-void core::bch::BatteryCharger::make(config::Core configCore) {
-    setHeatDurationH(configCore.heat.heatDurationH);
-    setTempRangeRetryTimeoutH(configCore.heat.tempRangeRetryTimeoutH);
-    setStartChargeAtVolts(configCore.charge.startChargeAtVolts);
-    setChargeStatusUpdatePeriodH(configCore.charge.chargeStatusUpdatePeriodH);
-    setActPwrSourceCheckTimeoutH(configCore.battery.actPwrSourceCheckTimeoutHours);
-    setTargetBatteryVoltage(configCore.charge.targetBatteryVoltage);
-    setConnectAwaitTimeoutSec(configCore.battery.connectAwaitTimeoutSec);
+    minTemperature = minTemperature_;
+    maxTemperature = maxTemperature_;
 }
 
 void core::bch::BatteryCharger::startAutoCharge(const char* i2cPath) {
