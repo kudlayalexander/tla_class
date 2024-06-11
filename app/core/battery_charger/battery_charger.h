@@ -1,12 +1,13 @@
 #pragma once
 
 #include "core/battery/battery.h"
+#include "config/config.h"
+
 #include <iomanip>
 #include <chrono>
 #include <thread>
 #include <iostream>
 #include <law/GPIO/SysfsGPIO.h>
-#include "config/config.h"
 
 namespace core {
     namespace bch {
@@ -26,19 +27,14 @@ namespace core {
                 void startAutoCharge(const char* i2c_path = "/dev/i2c-2");
 
                 std::chrono::seconds getConnectAwaitTimeoutSec();
-
                 std::chrono::hours getHeatDurationH();
-
                 std::chrono::hours getTempRangeRetryTimeoutH();
-
-                
                 float getStartChargeAtVolts();
-
                 std::chrono::hours getChargeStatusUpdatePeriodH();
-
                 std::chrono::hours getActPwrSourceCheckTimeoutH();
-
                 float getTargetBatteryVoltage();
+                int8_t getMinTemperature();
+                int8_t getMaxTemperature();
             private:
                 void startWarming();
                 void endWarming();

@@ -56,6 +56,16 @@ namespace config {
             ActPwrSourceCheckTimeoutHours actPwrSourceCheckTimeoutHours;
 
             auto operator <=> (const Battery &) const noexcept = default;
+
+            Battery& operator=(const Battery& rhs) {
+                if (this == &rhs) {
+                    return *this;
+                }
+                
+                connectAwaitTimeoutSec = rhs.connectAwaitTimeoutSec;
+                actPwrSourceCheckTimeoutHours = rhs.actPwrSourceCheckTimeoutHours;
+                return *this;
+            }
         };
 
         struct Heat {         
@@ -80,6 +90,16 @@ namespace config {
                 Max max;
 
                 auto operator <=>(const TempRangeCelsius &) const noexcept = default;
+
+                TempRangeCelsius& operator=(const TempRangeCelsius& rhs) {
+                    if (this == &rhs) {
+                        return *this;
+                    }
+                    
+                    min = rhs.min;
+                    max = rhs.max;
+                    return *this;
+                }
             };
 
             HeatDurationH heatDurationH;
@@ -87,6 +107,18 @@ namespace config {
             TempRangeCelsius tempRangeCelsius;
 
             auto operator <=> (const Heat &) const noexcept = default;
+
+            Heat& operator=(const Heat& rhs) {
+                if (this == &rhs) {
+                    return *this;
+                }
+                
+                heatDurationH = rhs.heatDurationH;
+                tempRangeRetryTimeoutH = rhs.tempRangeRetryTimeoutH;
+                tempRangeCelsius = rhs.tempRangeCelsius;
+
+                return *this;
+            }
         };
 
         struct Charge {
@@ -107,6 +139,18 @@ namespace config {
             TargetBatteryVoltage targetBatteryVoltage;
 
             auto operator <=> (const Charge &) const noexcept = default;
+
+            Charge& operator=(const Charge& rhs) {
+                if (this == &rhs) {
+                    return *this;
+                }
+                
+                chargeStatusUpdatePeriodH = rhs.chargeStatusUpdatePeriodH;
+                startChargeAtVolts = rhs.startChargeAtVolts;
+                targetBatteryVoltage = rhs.targetBatteryVoltage;
+
+                return *this;
+            }
         };
 
         Battery battery;
@@ -119,6 +163,18 @@ namespace config {
                     (heat == rhs.heat) &&
                     (charge == rhs.charge)
             );
+        }
+
+        Core& operator=(const Core& rhs) {
+            if (this == &rhs) {
+                return *this;
+            }
+            
+            battery = rhs.battery;
+            heat = rhs.heat;
+            charge = rhs.charge;
+
+            return *this;
         }
     };
 
