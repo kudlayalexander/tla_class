@@ -1,6 +1,4 @@
 #include "TLA2024.h"
-#include <iostream>
-
 
 core::TLA2024::TLA2024() {
     i2cFd = 0;
@@ -12,25 +10,27 @@ core::TLA2024::TLA2024() {
     setConversionTime();
 }
 
-bool core::TLA2024::connectToSlave(const char* i2cPath, uint8_t i2cAddress) {
+bool core::TLA2024::connectToSlave(std::string_view i2cPath, uint8_t i2cAddress) {
     if (i2cFd > 0) {
         close(i2cFd);
     }
-    std::cout << "Connecting to " << i2cPath << std::endl;
+
+    LOGGER_INFO(kModuleName, "Connecting to: '{:s}'", i2cPath);
 
     i2cFd = open(i2cPath, O_RDWR);
 
     if (i2cFd < 0) {
-        std::cout << "Unable to open file descriptor" << std::endl;
+        LOGGER_ERROR(kModuleName, "Unable to open file descriptor, path: '{:s}'", i2cPath);
         return 0;
     }
     else {
         if (ioctl(i2cFd, I2C_SLAVE, i2cAddress) < 0) {
-            std::cout << "File descriptor doesn't exist" << std::endl;
+            int addressAsInt = int(i2cAddress);
+            LOGGER_ERROR(kModuleName, "File descriptor doesn't exist, i2c path: '{:s}', i2c address: {:d}", i2cPath, addressAsInt);
             return 0;
         }
 
-        std::cout << "File descriptor successfully opened;" << std::endl;
+        LOGGER_INFO(kModuleName, "File descriptor successfully opened: '{:s}'", i2cPath);
     }
 
     return 1;
@@ -40,7 +40,7 @@ void core::TLA2024::disconnect() {
     if (i2cFd > 0) {
         close(i2cFd);
     }
-    std::cout << "File descriptor was closed" << std::endl;
+    LOGGER_INFO(kModuleName, "File descriptor was closed: '{:s}'");
 };
 
 void core::TLA2024::setConfiguration(bool continuous) {

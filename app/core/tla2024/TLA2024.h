@@ -10,6 +10,7 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <Logger/Utils.h>
 
 #define I2C_DEFAULT_PATH "/dev/i2c-2" 
 
@@ -20,6 +21,8 @@
 
 namespace core {
     class TLA2024 {
+        public:
+            static constexpr std::string_view kModuleName = "TLA2024";
         public:
             enum OperationSystem {
                 OS_MASK =  0X8000,
@@ -101,7 +104,7 @@ namespace core {
         public:
             TLA2024();
 
-            bool connectToSlave(const char *i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
+            bool connectToSlave(std::string_view i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
             void disconnect();
 
             int16_t readRaw(uint16_t mux);
