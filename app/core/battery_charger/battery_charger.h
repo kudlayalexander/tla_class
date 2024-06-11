@@ -23,6 +23,9 @@ namespace core {
                 float temperature;
                 float voltage;
 
+                int8_t minTemperature;
+                int8_t maxTemperature;
+
                 battery::Battery battery;
             public:
                 BatteryCharger();
@@ -78,10 +81,6 @@ namespace core {
 
                 // law::BoolRet BatteryCharger::getChargingStatus(law::gpio::Port port, std::uint8_t pinNumber);
 
-                enum TemperatureRestrictions {
-                    MIN_TEMPERATURE = 0,
-                    MAX_TEMPERATURE = 60
-                };
 
                 typedef enum BatteryChargeStatus {
                     ERROR = 0x00,

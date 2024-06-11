@@ -44,7 +44,11 @@ public:
                         utils::etlStringToStrView(conf.logging.level)));
 
         auto &configCore = conf.core;
-        core::bch::BatteryCharger batteryCharger {};
+
+        core::tla2024::TLA2024 tla {};
+        core::battery::Battery battery {tla};
+        core::bch::BatteryCharger batteryCharger {battery};
+        
         batteryCharger.make(configCore);
         return startServe();
     }

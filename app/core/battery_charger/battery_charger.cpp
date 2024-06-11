@@ -59,7 +59,7 @@ void core::bch::BatteryCharger::startAutoCharge(const char* i2cPath) {
                 while (batteryNeedsCharge()) {
                     temperature = battery.getTemperature();
 
-                    if (isTemperatureInRange(MIN_TEMPERATURE, MAX_TEMPERATURE)) {
+                    if (isTemperatureInRange(minTemperature, maxTemperature)) {
                         allowCharging();
 
                         while (voltage < startChargeAtVolts) {
@@ -80,7 +80,7 @@ void core::bch::BatteryCharger::startAutoCharge(const char* i2cPath) {
                         prohibitCharging();
                     }
                     else {
-                        if (isTemperatureLower(MIN_TEMPERATURE)) {
+                        if (isTemperatureLower(minTemperature)) {
                             startWarming();
 
                             // std::cout << "Sleep for hours: " << heatDurationH << std::endl;
@@ -94,14 +94,14 @@ void core::bch::BatteryCharger::startAutoCharge(const char* i2cPath) {
                                 break;
                             }
 
-                            if (isTemperatureLower(MIN_TEMPERATURE)) {
+                            if (isTemperatureLower(minTemperature)) {
                                 // std::cout << "Sleep for hours: " << tempRangeRetryTimeoutH << std::endl;
                                 std::this_thread::sleep_for(tempRangeRetryTimeoutH);
                             }
 
                             endWarming();
                         }
-                        else if (isTemperatureHigher(MAX_TEMPERATURE)) {
+                        else if (isTemperatureHigher(maxTemperature)) {
                             // std::cout << "Sleep for hours: " << tempRangeRetryTimeoutH << std::endl;
                             std::this_thread::sleep_for(tempRangeRetryTimeoutH);
                         }
