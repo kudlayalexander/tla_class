@@ -3,44 +3,37 @@
 #include "core/tla2024/TLA2024.h"
 
 namespace core{
-    namespace battery {
-        class Battery {
-            private:
-                tla2024::TLA2024 adc;
-                const char* i2cPath;
-            public:
-                Battery();
-                Battery(const TLA2024 &adc, const char* i2cPath = I2C_DEFAULT_PATH);
+    class Battery {
+        private:
+            TLA2024 adc;
+        public:
+            Battery();
+            Battery(const TLA2024 &adc);
 
-                constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
-                    return (r1 + r2) / r2;
-                }
+            constexpr float calculateVoltageDivisionScaleFactor(float r1, float r2) {
+                return (r1 + r2) / r2;
+            }
 
-                float getTemperature();
-                float getVoltage();
-                bool isBatteryConnected();
+            float getTemperature();
+            float getVoltage();
+            bool isBatteryConnected();
 
-                void setAdc(const TLA2024 &adc);
-                void setI2CPath(const char* i2cPath);
+            void setAdc(const TLA2024 &adc);
 
-                void connectBattery();
-                void connectBattery(const char* i2cPath);
+            void connectBattery();
+        private:
+            float calculateTemperature(float voltage);
+            float calculateResistance(float voltage);
+            float calculateValueByWeights(long double *coeffs, int coeffs_len, float value);
 
-                float getVoltage1();
-            private:
-                float calculateTemperature(float voltage);
-                float calculateResistance(float voltage);
-                float calculateValueByWeights(long double *coeffs, int coeffs_len, float value);
+            enum Temperature {
+                MAX_TEMPERATURE = 85,
+                MIN_TEMPERATURE = -40
+            };
 
-                enum Temperature {
-                    MAX_TEMPERATURE = 85,
-                    MIN_TEMPERATURE = -40
-                };
-
-                enum Resistance {
-                    MAX_RESISTANCE = 403567,
-                    MIN_RESISTANCE = 1084
-                };
-        };
-    }
+            enum Resistance {
+                MAX_RESISTANCE = 403567,
+                MIN_RESISTANCE = 1084
+            };
+    };
 }

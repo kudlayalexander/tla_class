@@ -1,50 +1,38 @@
 #include "battery.h"
 
-core::battery::Battery::Battery() {
-    adc = core::tla2024::TLA2024();
+core::Battery::Battery() {
+    adc = core::TLA2024();
     adc.setFullScaleRange(core::TLA2024::FSR_6_144V);
-    i2cPath = I2C_DEFAULT_PATH;
 }
 
-core::battery::Battery::Battery(const core::TLA2024 &adc_, const char *i2cPath_) {
+core::Battery::Battery(const core::TLA2024 &adc_) {
     adc = adc_;
-    i2cPath = i2cPath_;
 };
 
-float core::battery::Battery::getTemperature() {
+float core::Battery::getTemperature() {
     float voltage = adc.readVoltage(core::TLA2024::MUX_1_GND);
     return calculateTemperature(voltage);
 }
 
-float core::battery::Battery::getVoltage() {
+float core::Battery::getVoltage() {
     float voltage = adc.readVoltage(core::TLA2024::MUX_0_GND);
     auto batteryVoltageScaleFactor = calculateVoltageDivisionScaleFactor(430,110);
     return voltage * batteryVoltageScaleFactor;
 }
 
 
-void core::battery::Battery::connectBattery() {
-    adc.connectToSlave(i2cPath);
+void core::Battery::connectBattery() {
+    adc.connectToSlave();
 }
 
-void core::battery::Battery::connectBattery(const char* i2cPath_) {
-    i2cPath = i2cPath_;
-    adc.connectToSlave(i2cPath);
+bool core::Battery::isBatteryConnected() {
+    return adc.connectToSlave();
 }
 
-bool core::battery::Battery::isBatteryConnected() {
-    return adc.connectToSlave(i2cPath);
-}
-
-void core::battery::Battery::setAdc(const core::TLA2024 &adc_) {
+void core::Battery::setAdc(const core::TLA2024 &adc_) {
     adc = adc_;
 }
-
-void core::battery::Battery::setI2CPath(const char* i2cPath_) {
-    i2cPath = i2cPath_;
-}
-
-float core::battery::Battery::calculateTemperature(float voltage) {
+float core::Battery::calculateTemperature(float voltage) {
     if (voltage < 0.98f) return MAX_TEMPERATURE;
     if (voltage > 2.82f) return MIN_TEMPERATURE;
 
@@ -63,7 +51,7 @@ float core::battery::Battery::calculateTemperature(float voltage) {
     return calculateValueByWeights(temperatureRegressionCoeffs, coeffs_len, voltage);
 };
 
-float core::battery::Battery::calculateResistance(float voltage) {
+float core::Battery::calculateResistance(float voltage) {
     if (voltage < 0.98f) return MIN_RESISTANCE;
     if (voltage > 2.82f) return MAX_RESISTANCE;
 
@@ -96,7 +84,7 @@ float core::battery::Battery::calculateResistance(float voltage) {
     return resistance;
 };
 
-float core::battery::Battery::calculateValueByWeights(long double *coeffs, int coeffs_len, float value) {
+float core::Battery::calculateValueByWeights(long double *coeffs, int coeffs_len, float value) {
     long double result = 0;
     long double degree = 1;
     long double valueDouble = static_cast<long double>(value);

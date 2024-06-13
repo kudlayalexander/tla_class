@@ -8,6 +8,7 @@
 #include <thread>
 #include <iostream>
 #include <law/GPIO/SysfsGPIO.h>
+#include <elaw/GPIO/SysfsGPIO.h>
 #include <Logger/Utils.h>
 
 namespace core {
@@ -15,6 +16,12 @@ namespace core {
         class BatteryCharger {
             public:
                 static constexpr std::string_view kModuleName = "BatteryChargerModule";
+            public:
+            enum BatteryChargeStatus {
+                ERROR = 0x0000,
+                IN_CHARGE = 0x0001,
+                FULL_CHARGE = 0x0010
+            };
             private:
                 config::Core configCore;
 
@@ -24,20 +31,24 @@ namespace core {
                 law::gpio::SysfsGPIO batteryStatusFirstGpio;
                 law::gpio::SysfsGPIO batteryStatusSecondGpio;
 
+                elaw::gpio::SysfsGPIO batteryStatusFirstGpioEvent;
+                elaw::gpio::SysfsGPIO batteryStatusSecondGpioEvent;
+
                 float temperature;
                 float voltage;
 
-                battery::Battery battery;
+                Battery battery;
+                BatteryChargeStatus batteryChargeStatus;
             public:
-                BatteryCharger(const battery::Battery &battery, config::Core configCore_);
+                BatteryCharger(Battery &battery, config::Core configCore_, law::ep::poll::PollObsPtr pollPtr);
                 
-                void startAutoCharge(std::string_view i2c_path = "/dev/i2c-2");
+                void startAutoCharge();
             private:
                 void startWarming();
                 void endWarming();
 
-                void allowCharging();
-                void prohibitCharging();
+                void chargeEnable();
+                void chargeDisable();
 
                 bool batteryIsPowerSource();
                 bool batteryNeedsCharge();

@@ -10,7 +10,7 @@ core::TLA2024::TLA2024() {
     setConversionTime();
 }
 
-bool core::TLA2024::connectToSlave(std::string_view i2cPath, uint8_t i2cAddress) {
+bool core::TLA2024::connectToSlave() {
     if (i2cFd > 0) {
         close(i2cFd);
     }
@@ -40,7 +40,7 @@ void core::TLA2024::disconnect() {
     if (i2cFd > 0) {
         close(i2cFd);
     }
-    LOGGER_INFO(kModuleName, "File descriptor was closed: '{:s}'");
+    LOGGER_INFO(kModuleName, "File descriptor was closed: '{:s}'", i2cPath);
 };
 
 void core::TLA2024::setConfiguration(bool continuous) {

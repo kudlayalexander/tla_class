@@ -45,9 +45,23 @@ public:
 
         auto &configCore = conf.core;
 
-        core::tla2024::TLA2024 tla {};
-        core::battery::Battery battery { tla };
-        core::bch::BatteryCharger batteryCharger { battery, configCore };
+        core::TLA2024 tla {};
+        core::Battery battery { tla };
+        core::bch::BatteryCharger batteryCharger { battery, configCore, pollPtr };
+
+        // const auto &apiConfig = conf.api;
+        
+        // const auto &udsUdpServerConf =
+        //         std::get<config::tp::UdsUdpServer>(conf.api.tpapi.ep);
+        // tpapi::ep::UdsUdpServer udsUdpServer(
+        //         utils::etlStringToStrView(udsUdpServerConf.path), pollPtr);
+        // api::tp::TpApiEndPoint tpapiEp{tpapi::ep::DataTransportObsPtr(&udsUdpServer), pollPtr};
+
+        // api::TpapiController tpapiController{
+        //         api::tp::EndPointObsPtr(&tpapiEp),
+        //         api::conf::TpapiConfigurationControllerObsPtr(&tpapiConfigurationController)
+        // };
+
         return startServe();
     }
 

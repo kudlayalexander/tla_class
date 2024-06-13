@@ -1,6 +1,13 @@
 #include "battery_charger.h"
 
-core::bch::BatteryCharger(const battery::Battery &battery, config::Core configCore_)
+core::bch::BatteryCharger::BatteryCharger(Battery &battery_, config::Core configCore_, law::ep::poll::PollObsPtr pollPtr):
+batteryWarmingControlGpio(law::gpio::Port::GPIO2, 17),
+batteryEnablingControlGpio(law::gpio::Port::GPIO2, 18),
+batteryChargingControlGpio(law::gpio::Port::GPIO3, 27),
+batteryStatusFirstGpio(law::gpio::Port::GPIO3, 7),
+batteryStatusSecondGpio(law::gpio::Port::GPIO3, 4),
+batteryStatusFirstGpioEvent(law::gpio::Port::GPIO3, 7, pollPtr),
+batteryStatusSecondGpioEvent(law::gpio::Port::GPIO3, 4, pollPtr)
 {
     battery = battery_;
     configCore = configCore_;
@@ -21,11 +28,10 @@ core::bch::BatteryCharger(const battery::Battery &battery, config::Core configCo
     batteryStatusSecondGpio.setPinMode(law::gpio::PinMode::INPUT);
 }
 
-void core::bch::BatteryCharger::startAutoCharge(std::string_view i2cPath)
+void core::bch::BatteryCharger::startAutoCharge()
 {
     while (true)
     {
-        battery.setI2CPath(i2cPath);
         bool isBatteryConnected = battery.isBatteryConnected();
 
         if (!isBatteryConnected)
@@ -37,7 +43,7 @@ void core::bch::BatteryCharger::startAutoCharge(std::string_view i2cPath)
         {
             enableBattery();
             endWarming();
-            prohibitCharging();
+            chargeDisable();
 
             if (batteryIsPowerSource())
             {
@@ -52,23 +58,34 @@ void core::bch::BatteryCharger::startAutoCharge(std::string_view i2cPath)
 
                     if (isTemperatureInRange(configCore.heat.tempRangeCelsius.min, configCore.heat.tempRangeCelsius.max))
                     {
-                        allowCharging();
+                        chargeEnable();
+                        batteryStatusFirstGpioEvent.setOnLogicalTrueHandler([this]() { 
+                            this->chargeDisable();
 
-                        while (voltage < configCore.charge.targetBatteryVoltage)
-                        {
-                            std::this_thread::sleep_for(configCore.charge.chargeStatusUpdatePeriodH);
+                            batteryChargeStatus = BatteryChargeStatus::FULL_CHARGE;
+                        });
 
-                            if (battery.isBatteryConnected())
-                            {
-                                voltage = battery.getVoltage();
+                        batteryStatusSecondGpioEvent.setOnLogicalTrueHandler([this]() { 
+                            batteryChargeStatus = BatteryChargeStatus::IN_CHARGE;
+                        });
+
+                        batteryStatusFirstGpioEvent.setOnLogicalFalseHandler([this]() { 
+                            batteryChargeStatus = static_cast<BatteryChargeStatus>(batteryChargeStatus & 0x0001);
+
+                            if (batteryChargeStatus == BatteryChargeStatus::ERROR) {
+                                this->chargeDisable();
+                                LOGGER_ERROR(kModuleName, "Charge status error");
                             }
-                            else
-                            {
-                                break;
-                            }
-                        }
+                        });
 
-                        prohibitCharging();
+                        batteryStatusSecondGpioEvent.setOnLogicalFalseHandler([this]() { 
+                            batteryChargeStatus = static_cast<BatteryChargeStatus>(batteryChargeStatus & 0x0010);
+
+                            if (batteryChargeStatus == BatteryChargeStatus::ERROR) {
+                                this->chargeDisable();
+                                LOGGER_ERROR(kModuleName, "Charge status error");
+                            }
+                        });
                     }
                     else
                     {
@@ -129,12 +146,12 @@ void core::bch::BatteryCharger::disableBattery()
     batteryEnablingControlGpio.setState(false);
 }
 
-void core::bch::BatteryCharger::allowCharging()
+void core::bch::BatteryCharger::chargeEnable()
 {
     batteryChargingControlGpio.setState(false);
 }
 
-void core::bch::BatteryCharger::prohibitCharging()
+void core::bch::BatteryCharger::chargeDisable()
 {
     batteryChargingControlGpio.setState(true);
 }

@@ -99,12 +99,13 @@ namespace core {
             uint16_t os;
             uint16_t conversionTime;
 
-            uint8_t address;
+            uint8_t i2cAddress;
+            const char* i2cPath;
         
         public:
             TLA2024();
 
-            bool connectToSlave(std::string_view i2cPath = I2C_DEFAULT_PATH, uint8_t i2cAddress = I2C_ADDRESS_1);
+            bool connectToSlave();
             void disconnect();
 
             int16_t readRaw(uint16_t mux);
