@@ -5,7 +5,7 @@ int main() noexcept {
     static constexpr std::string_view kModuleName = "MainModule";
     return boost::leaf::try_handle_all(
             []() -> boost::leaf::result<int> {
-                static constexpr std::string_view kConfigFilePath = "/etc/bch/config.json";
+                static constexpr std::string_view kConfigFilePath = "debian/bch/etc/bch/config.json";
                 config::JsonConfigManager jsonConfigManager(kConfigFilePath);
                 config::ConfigManagerObsPtr jsonConfigManagerPtr(&jsonConfigManager);
                 BOOST_LEAF_CHECK(utils::file::parseConfiguration(jsonConfigManagerPtr));

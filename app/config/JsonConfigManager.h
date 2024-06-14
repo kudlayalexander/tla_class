@@ -260,7 +260,7 @@ namespace config {
         using CoreChargeRet = CustomError<Core::Charge>;
         using CoreHeatTempRangeCelsiusRet = CustomError<Core::Heat::TempRangeCelsius>;
 
-        using LoggingRet = CustomError<Logging>;
+        using LoggerRet = CustomError<Logger>;
 
     private:
         Config config;
@@ -295,10 +295,10 @@ namespace config {
                                 json[Value(kCoreFieldName.data(), kCoreFieldName.size())],
                                 newConfig.core);
 
-                        static constexpr std::string_view kLoggingFieldName = "logging";
+                        static constexpr std::string_view kLoggingFieldName = "logger";
                         applyLogging(
                                 json[Value(kLoggingFieldName.data(), kLoggingFieldName.size())],
-                                newConfig.logging);
+                                newConfig.logger);
 
                         config = newConfig;
                         return {};
@@ -345,7 +345,7 @@ namespace config {
         Status restore() noexcept override {
             return boost::leaf::try_handle_some(
                     [this]() -> Status {
-                        static constexpr std::string_view kDefaultConfiguration = R"({"api":{"tpapi":{"ep":{"type":"uds_udp_server","uds_udp_server":{"path":"/var/run/gnssm.ctl.sock"}}},"gnss":{"transport":{"type":"tcp_server","tcp_server":{"port":5821}}},"rtcm":{"transport":{"type":"uds_udp_server","tcp_server":{"port":5822},"uds_udp_server":{"path":"/var/run/gnssm.sock"}}}},"core":{"module_type":"ZED_F9P","gnss":{"transport":{"type":"rs232","rs232":{"device":"/dev/ttymxc1","baudrate":230400,"data_bits":8,"parity":"none","stop_bits":1,"flow_control":false}},"properties":{"navigation_solution_rate_ms":1000}},"rtcm":{"transport":{"type":"rs232","rs232":{"device":"/dev/ttymxc2","baudrate":38400,"data_bits":8,"parity":"none","stop_bits":1,"flow_control":false}},"properties":{"rtk_mode":{"mode":"rover","base":{"lat":580063510,"lon":562873283,"alt":172469}}}},"imu":{"enable":true,"properties":{"install_mode":{"mode":"auto","manual":{"x":100,"y":100,"z":100}}},"odo_sensor":{"enable":true,"type":"j1979","j1979":{"if":"can0","dst_addr":"0x7E8"}}}},"logging":{"level":"INFO"}})";
+                        static constexpr std::string_view kDefaultConfiguration = R"({"api":{"tpapi":{"ep":{"type":"uds_udp_server","uds_udp_server":{"path":"/var/run/bch.ctl.sock"}}}},"core":{"battery":{"connect_await_timeout_sec":60,"act_pwr_source_check_timeout_h":1},"heat":{"heat_duration_h":2,"temp_range_retry_timeout_h":12,"temp_range_celsius":{"min":0,"max":60}},"charge":{"start_charge_at_volts":11.4,"target_battery_voltage":12.6,"charge_status_update_period_h":1}},"logger":{"level":"INFO"}})";
                         BOOST_LEAF_CHECK(parse(kDefaultConfiguration));
                         saveBrokenConfigFile();
                         BOOST_LEAF_CHECK(save());
@@ -394,13 +394,13 @@ namespace config {
             PARSE_OBJECT_FIELD(coreField, json, "core");
             BOOST_LEAF_AUTO(core, parseCore(coreField));
 
-            PARSE_OBJECT_FIELD(loggingField, json, "logging");
-            BOOST_LEAF_AUTO(logging, parseLogging(loggingField));
+            PARSE_OBJECT_FIELD(loggerField, json, "logger");
+            BOOST_LEAF_AUTO(logger, parseLogging(loggerField));
 
             return Config{
                     .api = api,
                     .core = core,
-                    .logging = logging
+                    .logger = logger
             };
         }
 
@@ -510,8 +510,8 @@ namespace config {
                 Value(tempRangeCelsius.max);
         }
 
-        static void applyLogging(ValueRef &loggingField, const Logging &logging) {
-            loggingField["level"].SetString(logging.level.data(), logging.level.size());
+        static void applyLogging(ValueRef &loggingField, const Logger &logger) {
+            loggingField["level"].SetString(logger.level.data(), logger.level.size());
         }
 
         static ApiRet parseApi(ConstValueRef apiField) noexcept {
@@ -541,10 +541,10 @@ namespace config {
         }
         
 
-        static LoggingRet parseLogging(ConstValueRef loggingField) noexcept {
-            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(level, loggingField, "level", Logging::Level,
-                                                  Logging::kLevelAllowValues);
-            return Logging{
+        static LoggerRet parseLogging(ConstValueRef loggingField) noexcept {
+            PARSE_STRING_FIELD_CHECK_ALLOW_VALUES(level, loggingField, "level", Logger::Level,
+                                                  Logger::kLevelAllowValues);
+            return Logger{
                     .level = level
             };
         }

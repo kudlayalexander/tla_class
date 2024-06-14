@@ -11,25 +11,16 @@ batteryStatusSecondGpioEvent(law::gpio::Port::GPIO3, 4, pollPtr)
 {
     battery = battery_;
     configCore = configCore_;
-
-    batteryWarmingControlGpio = law::gpio::SysfsGPIO(law::gpio::Port::GPIO2, 17);
     batteryWarmingControlGpio.setPinMode(law::gpio::PinMode::OUTPUT);
-
-    batteryEnablingControlGpio = law::gpio::SysfsGPIO(law::gpio::Port::GPIO2, 18);
     batteryEnablingControlGpio.setPinMode(law::gpio::PinMode::OUTPUT);
-
-    batteryChargingControlGpio = law::gpio::SysfsGPIO(law::gpio::Port::GPIO3, 27);
     batteryChargingControlGpio.setPinMode(law::gpio::PinMode::OUTPUT);
-
-    batteryStatusFirstGpio = law::gpio::SysfsGPIO(law::gpio::Port::GPIO3, 7);
     batteryStatusFirstGpio.setPinMode(law::gpio::PinMode::INPUT);
-
-    batteryStatusSecondGpio = law::gpio::SysfsGPIO(law::gpio::Port::GPIO3, 4);
     batteryStatusSecondGpio.setPinMode(law::gpio::PinMode::INPUT);
 }
 
 void core::bch::BatteryCharger::startAutoCharge()
 {
+    LOGGER_INFO(kModuleName, "Charge started");
     while (true)
     {
         bool isBatteryConnected = battery.isBatteryConnected();

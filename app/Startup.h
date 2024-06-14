@@ -41,7 +41,7 @@ public:
 
         Logger::logger.setCurrentPriority(
                 Logger::getMessagePriorityByName(
-                        utils::etlStringToStrView(conf.logging.level)));
+                        utils::etlStringToStrView(conf.logger.level)));
 
         auto &configCore = conf.core;
 

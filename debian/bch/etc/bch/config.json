@@ -1,4 +1,14 @@
 {
+    "api": {
+        "tpapi": {
+            "ep": {
+                "type": "uds_udp_server",
+                "uds_udp_server": {
+                    "path": "/var/run/bch.ctl.sock"
+                }
+            }
+        }
+    },
     "core": {
         "battery": {
             "connect_await_timeout_sec": 60,

@@ -122,7 +122,7 @@ namespace config {
         }
     };
 
-    struct Logging {
+    struct Logger {
         using Level = etl::string<10>;
         using LevelAllowValues = std::array<std::string_view, 8>;
         static constexpr LevelAllowValues kLevelAllowValues = {
@@ -131,7 +131,7 @@ namespace config {
 
         Level level;
 
-        bool operator==(const Logging &rhs) const noexcept {
+        bool operator==(const Logger &rhs) const noexcept {
             return (level == rhs.level);
         }
     };
@@ -139,13 +139,13 @@ namespace config {
     struct Config {
         Api api;
         Core core;
-        Logging logging;
+        Logger logger;
 
         bool operator==(const Config &rhs) const noexcept {
             return (
                     (api == rhs.api) &&
                     (core == rhs.core) &&
-                    (logging == rhs.logging)
+                    (logger == rhs.logger)
             );
         }
     };
