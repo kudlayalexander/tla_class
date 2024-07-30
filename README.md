@@ -2,5 +2,5 @@
 Класс C++ для управления АЦП - tla2024
 
 # Класс для рассчёта температуры и сопротивления на основе напряжения 
-temperature_sensor
+temperature_sensor  
 abcdafwefewfeef
